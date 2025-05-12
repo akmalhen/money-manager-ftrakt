@@ -12,6 +12,8 @@ import {
   HiBookOpen,
   HiAcademicCap,
   HiFlag,
+  HiSparkles,
+  HiChatBubbleLeftRight,
 } from "react-icons/hi2";
 
 export const BASE_API_URL = process.env.NEXT_PUBLIC_BASE_API_URL;
@@ -94,6 +96,12 @@ export const SidebarLinks = [
     path: "/goals",
     icon: <HiFlag size={20} />,
     section: "Utility",
+  },
+  {
+    title: "AI Advice",
+    path: "/ai-advice",
+    icon: <HiSparkles size={20} />,
+    section: "AI Tools",
   },
 ];
 

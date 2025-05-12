@@ -7,6 +7,7 @@ import Header from "@/components/navigation/Header";
 import MobileNav from "@/components/navigation/MobileNav";
 import { Toaster } from "@/components/ui/toaster";
 import FloatingActions from "@/components/action/FloatingActions";
+import ChatBotWrapper from "@/components/chat/ChatBotWrapper";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 
@@ -44,6 +45,7 @@ export default async function RootLayout({
       <div className="fixed bottom-5 right-5 z-50">
         <FloatingActions />
       </div>
+      <ChatBotWrapper />
     </main>
   );
 }

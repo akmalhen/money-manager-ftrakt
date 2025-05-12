@@ -10,13 +10,14 @@ function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed hidden min-h-screen w-[200px] flex-col justify-between border-r border-white/10 bg-black/80 backdrop-blur-md shadow-xl lg:flex xl:w-[250px] overflow-hidden">
-      {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-60 h-60 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20"></div>
-      <div className="absolute bottom-0 left-0 w-60 h-60 bg-blue-500/10 rounded-full blur-[80px] -ml-20 -mb-20"></div>
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px]"></div>
+    <nav className="fixed hidden h-screen w-[200px] lg:flex xl:w-[250px] flex-col border-r border-white/10 bg-black/80 backdrop-blur-md shadow-xl">
+      {/* Decorative elements - position these absolutely so they don't affect layout */}
+      <div className="absolute top-0 right-0 w-60 h-60 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
+      <div className="absolute bottom-0 left-0 w-60 h-60 bg-blue-500/10 rounded-full blur-[80px] -ml-20 -mb-20 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px] pointer-events-none"></div>
       
-      <div className="mx-4 flex flex-col gap-6 relative z-10 mt-6">
+      {/* Logo section - fixed height */}
+      <div className="flex-shrink-0 p-4 relative z-10">
         <Link
           href={"/"}
           className="p-3 text-center text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-600 flex items-center justify-center gap-2"
@@ -26,7 +27,11 @@ function Sidebar() {
           </div>
           <span>FinTrack</span>
         </Link>
-        <div className="space-y-6 mt-4">
+      </div>
+      
+      {/* Scrollable content area without visible scrollbar */}
+      <div className="flex-grow overflow-y-auto no-scrollbar relative z-10">
+        <div className="px-4 space-y-6 mb-4">
           {/* Group links by section */}
           {Array.from(new Set(SidebarLinks.map(link => link.section))).map((section) => (
             <div key={section} className="space-y-2">
@@ -56,7 +61,9 @@ function Sidebar() {
           ))}
         </div>
       </div>
-      <div className="relative z-10 mb-6 mx-4">
+      
+      {/* Sign out button - fixed at bottom */}
+      <div className="flex-shrink-0 sticky bottom-0 bg-black/80 backdrop-blur-sm border-t border-white/10 p-4 relative z-10">
         <SignOutBtn />
       </div>
     </nav>
@@ -64,3 +71,4 @@ function Sidebar() {
 }
 
 export default Sidebar;
+
