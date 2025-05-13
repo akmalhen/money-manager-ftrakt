@@ -87,7 +87,6 @@
   margin: 1.5rem 0;
 }
 
-/* Light mode adjustments */
 :root[class~="light"] .article-content h2,
 :root[class~="light"] .article-content h3,
 :root[class~="light"] .article-content h4,

@@ -84,10 +84,7 @@ async function AccountPage() {
           </div>
           
         </div>
-
-        {/* Overview Charts Section */}
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
-          {/* Income Overview */}
           <div className="rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 shadow-lg">
             <div className="flex items-center justify-between pb-4 mb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
@@ -106,7 +103,6 @@ async function AccountPage() {
             </div>
           </div>
 
-          {/* Expense Overview */}
           <div className="rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 shadow-lg">
             <div className="flex items-center justify-between pb-4 mb-3 border-b border-white/10">
               <div className="flex items-center gap-3">
@@ -126,7 +122,6 @@ async function AccountPage() {
           </div>
         </div>
 
-        {/* Activity Table Section */}
         <div className="rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 shadow-lg">
           <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
             <div className="h-6 w-1.5 bg-gradient-to-b from-blue-400 to-indigo-600 rounded-full"></div>

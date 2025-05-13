@@ -15,7 +15,6 @@ export default function ArticlesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [activeTab, setActiveTab] = useState("all")
 
-  // Get unique categories for the filter
   const categories = [
     ...new Set(articles.map((article) => article.category)),
   ].map((category) => ({
@@ -23,7 +22,6 @@ export default function ArticlesPage() {
     name: category.charAt(0).toUpperCase() + category.slice(1),
   }))
 
-  // Filter articles based on search query and selected category
   const filteredArticles = articles.filter((article) => {
     const matchesSearch =
       searchQuery === "" ||
@@ -36,22 +34,18 @@ export default function ArticlesPage() {
     return matchesSearch && matchesCategory
   })
 
-  // Get favorite articles
   const favoriteArticles = filteredArticles.filter((article) => article.isFavorite)
 
   return (
     <section className="mb-6 px-2 md:px-0">
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center gap-3 mb-2">
           <h3 className="text-lg font-bold md:text-xl bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-600">Financial Articles</h3>
           <div className="h-px flex-grow bg-gradient-to-r from-blue-500/50 to-transparent"></div>
         </div>
 
-        {/* Daily Tip */}
         <DailyTipCard />
 
-        {/* Search and Filter */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ArticleSearch onSearch={setSearchQuery} />
           <CategoryFilter 
@@ -61,7 +55,6 @@ export default function ArticlesPage() {
           />
         </div>
 
-        {/* Tabs */}
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="bg-black/60 border border-white/10">
             <TabsTrigger 

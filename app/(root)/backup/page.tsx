@@ -13,7 +13,7 @@ export default function BackupPage() {
   const { data: session, status } = useSession()
   const userId = session?.user?.id
 
-  // Add useEffect to handle session loading
+
   useEffect(() => {
     if (status === 'loading') {
       setIsPageLoading(true)
@@ -22,7 +22,6 @@ export default function BackupPage() {
     }
   }, [status])
 
-  // Helper function to download data
   const downloadData = (data: string, filename: string, type: string) => {
     try {
       const blob = new Blob([data], { type })
@@ -32,8 +31,7 @@ export default function BackupPage() {
       a.download = filename
       document.body.appendChild(a)
       a.click()
-      
-      // Small delay before cleanup to ensure download starts
+
       setTimeout(() => {
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
@@ -48,18 +46,15 @@ export default function BackupPage() {
     }
   }
 
-  // Helper to escape CSV values
   const escapeCSV = (value: any): string => {
     if (value === null || value === undefined) return ""
     const str = String(value)
-    // If the value contains commas, quotes, or newlines, wrap it in quotes and escape any quotes
     if (str.includes(',') || str.includes('"') || str.includes('\n')) {
       return `"${str.replace(/"/g, '""')}"`
     }
     return str
   }
 
-  // Export all data as JSON
   const exportAllData = async () => {
     if (!userId) {
       toast({
@@ -73,11 +68,9 @@ export default function BackupPage() {
     try {
       setIsLoading(true)
       
-      // Use the consolidated export API endpoint
       let exportData = { expenses: [], incomes: [], accounts: [], categories: [], tasks: [] }
       
       try {
-        // Fetch from the main export endpoint
         const exportRes = await fetch('/api/export')
         if (exportRes.ok) {
           const data = await exportRes.json()
@@ -101,7 +94,6 @@ export default function BackupPage() {
         console.error('Error fetching export data:', error)
       }
       
-      // Fetch tasks separately since they might not be included in the main export
       try {
         const tasksRes = await fetch('/api/tasks')
         if (tasksRes.ok) {
@@ -114,7 +106,6 @@ export default function BackupPage() {
         console.error('Error fetching tasks:', error)
       }
       
-      // Add export metadata
       const combinedData = {
         ...exportData,
         exportDate: new Date().toISOString(),
@@ -129,10 +120,8 @@ export default function BackupPage() {
         tasksCount: exportData.tasks.length
       })
       
-      // Convert to JSON string
       const jsonString = JSON.stringify(combinedData, null, 2)
       
-      // Download the data
       downloadData(
         jsonString, 
         `fintrack-backup-${new Date().toISOString().split("T")[0]}.json`, 
@@ -155,7 +144,6 @@ export default function BackupPage() {
     }
   }
 
-  // Export transactions as CSV
   const exportTransactionsAsCsv = async () => {
     if (!userId) {
       toast({
@@ -169,11 +157,9 @@ export default function BackupPage() {
     try {
       setIsLoading(true)
       
-      // Use the transaction export API endpoint
       let transactions = []
       
       try {
-        // Changed from /api/export/transactions to /api/expense and /api/income
         const expensesRes = await fetch('/api/expense')
         const incomesRes = await fetch('/api/income')
         
@@ -196,7 +182,6 @@ export default function BackupPage() {
           console.error('Failed to fetch incomes:', incomesRes.status, errorText)
         }
         
-        // Combine expenses and incomes into transactions
         expenses = expenses.map((expense: any) => ({
           ...expense,
           type: 'expense'
@@ -211,7 +196,7 @@ export default function BackupPage() {
         
       } catch (error) {
         console.error('Error fetching transactions:', error)
-        throw error // Re-throw to be caught by the outer try/catch
+        throw error 
       }
       
       if (transactions.length === 0) {
@@ -226,10 +211,8 @@ export default function BackupPage() {
       
       console.log('Exporting transactions:', { transactionsCount: transactions.length })
 
-      // Create CSV header
       const headers = ["ID", "Title", "Amount", "Type", "Category", "Account", "Date", "Notes"]
 
-      // Create CSV rows
       const rows = transactions.map((transaction: any) => {
         return [
           escapeCSV(transaction._id || transaction.id || ''),
@@ -243,7 +226,6 @@ export default function BackupPage() {
         ]
       })
 
-      // Combine header and rows
       const csvContent = [headers.map(escapeCSV).join(","), ...rows.map((row: any[]) => row.join(","))].join("\n")
 
       downloadData(
@@ -268,7 +250,6 @@ export default function BackupPage() {
     }
   }
 
-  // Export accounts as CSV
   const exportAccountsAsCsv = async () => {
     if (!userId) {
       toast({
@@ -282,11 +263,9 @@ export default function BackupPage() {
     try {
       setIsLoading(true)
       
-      // Use the accounts export API endpoint
       let accounts = []
       
       try {
-        // Changed from /api/export/accounts to /api/account
         const response = await fetch('/api/account')
         if (response.ok) {
           accounts = await response.json()
@@ -298,7 +277,7 @@ export default function BackupPage() {
         }
       } catch (error) {
         console.error('Error fetching accounts:', error)
-        throw error // Re-throw to be caught by the outer try/catch
+        throw error 
       }
       
       if (accounts.length === 0) {
@@ -313,10 +292,8 @@ export default function BackupPage() {
       
       console.log('Exporting accounts:', { accountsCount: accounts.length })
 
-      // Create CSV header
       const headers = ["ID", "Account Name", "Balance", "Color", "Created Date"]
 
-      // Create CSV rows
       const rows = accounts.map((account: any) => {
         return [
           escapeCSV(account._id || account.id || ''),
@@ -327,7 +304,6 @@ export default function BackupPage() {
         ]
       })
 
-      // Combine header and rows
       const csvContent = [headers.map(escapeCSV).join(","), ...rows.map((row: any[]) => row.join(","))].join("\n")
 
       downloadData(
@@ -352,7 +328,6 @@ export default function BackupPage() {
     }
   }
 
-  // Export categories as CSV
   const exportCategoriesAsCsv = async () => {
     if (!userId) {
       toast({
@@ -366,11 +341,9 @@ export default function BackupPage() {
     try {
       setIsLoading(true)
       
-      // Use the categories export API endpoint
       let categories = []
       
       try {
-        // Changed from /api/export/categories to /api/category
         const response = await fetch('/api/category')
         if (response.ok) {
           categories = await response.json()
@@ -382,7 +355,7 @@ export default function BackupPage() {
         }
       } catch (error) {
         console.error('Error fetching categories:', error)
-        throw error // Re-throw to be caught by the outer try/catch
+        throw error 
       }
       
       if (categories.length === 0) {
@@ -397,10 +370,8 @@ export default function BackupPage() {
       
       console.log('Exporting categories:', { categoriesCount: categories.length })
 
-      // Create CSV header
       const headers = ["ID", "Category Name", "Budget", "Created Date"]
 
-      // Create CSV rows
       const rows = categories.map((category: any) => {
         return [
           escapeCSV(category._id || category.id || ''),
@@ -410,7 +381,6 @@ export default function BackupPage() {
         ]
       })
 
-      // Combine header and rows
       const csvContent = [headers.map(escapeCSV).join(","), ...rows.map((row: any[]) => row.join(","))].join("\n")
 
       downloadData(
@@ -435,7 +405,6 @@ export default function BackupPage() {
     }
   }
   
-  // Export tasks as CSV
   const exportTasksAsCsv = async () => {
     if (!userId) {
       toast({
@@ -449,7 +418,6 @@ export default function BackupPage() {
     try {
       setIsLoading(true)
       
-      // Fetch real task data
       const response = await fetch('/api/tasks')
       
       if (!response.ok) {
@@ -460,10 +428,8 @@ export default function BackupPage() {
       
       console.log('Exporting tasks:', { tasksCount: tasks.length })
 
-      // Create CSV header
       const headers = ["ID", "Title", "Description", "Status", "Priority", "Deadline", "Created Date"]
 
-      // Create CSV rows
       const rows = tasks.map((task: any) => {
         return [
           escapeCSV(task._id),
@@ -476,7 +442,6 @@ export default function BackupPage() {
         ]
       })
 
-      // Combine header and rows
       const csvContent = [headers.map(escapeCSV).join(","), ...rows.map((row: any[]) => row.join(","))].join("\n")
 
       downloadData(
@@ -501,7 +466,6 @@ export default function BackupPage() {
     }
   }
 
-  // Render loading state while session is loading
   if (isPageLoading) {
     return (
       <div className="flex items-center justify-center h-[60vh]">
@@ -513,7 +477,6 @@ export default function BackupPage() {
   return (
     <section className="mb-6 px-2 md:px-0">
       <div className="w-full space-y-6 md:mb-6">
-        {/* Header */}
         <div className="flex items-center gap-3 mb-2">
           <h3 className="text-lg font-bold md:text-xl bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-600">Backup & Export</h3>
           <div className="h-px flex-grow bg-gradient-to-r from-emerald-500/50 to-transparent"></div>

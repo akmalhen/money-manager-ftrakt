@@ -16,11 +16,9 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([])
 
   useEffect(() => {
-    // Find the current article
     const currentArticle = articles.find((a) => a.id === params.id) || null
     setArticle(currentArticle)
 
-    // Find related articles based on category and tags
     if (currentArticle) {
       const related = articles
         .filter((a) => 
@@ -28,8 +26,8 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
           (a.category === currentArticle.category || 
            a.tags.some(tag => currentArticle.tags.includes(tag)))
         )
-        .sort(() => 0.5 - Math.random()) // Shuffle
-        .slice(0, 3) // Take up to 3
+        .sort(() => 0.5 - Math.random()) 
+        .slice(0, 3)
       
       setRelatedArticles(related)
     }
@@ -76,7 +74,6 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
   return (
     <section className="mb-6 px-2 md:px-0">
       <div className="space-y-6">
-        {/* Back button */}
         <div className="flex items-center gap-3 mb-4">
           <Link href="/articles">
             <Button variant="outline" size="sm" className="border-white/10 hover:bg-background/80">
@@ -87,10 +84,8 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main content */}
           <div className="lg:col-span-2 space-y-6">
             <Card className="border border-white/10 bg-black/40 backdrop-blur-sm shadow-lg dark:border-white/10 dark:bg-black/40 dark:backdrop-blur-sm overflow-hidden">
-              {/* Article header image */}
               <div className="relative h-64 w-full overflow-hidden">
                 <img
                   src={article.imageUrl || "/placeholder.svg"}
@@ -108,7 +103,6 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
               </div>
 
               <CardContent className="p-6">
-                {/* Article header */}
                 <div className="mb-6">
                   <h1 className="text-2xl md:text-3xl font-bold mb-4">{article.title}</h1>
                   <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
@@ -136,13 +130,11 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
                   </div>
                 </div>
 
-                {/* Article content */}
                 <div 
                   className="article-content max-w-none p-4 mt-4 mb-6 rounded-lg bg-black/20 border border-white/5"
                   dangerouslySetInnerHTML={{ __html: article.content }}
                 />
 
-                {/* Tags */}
                 {article.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-white/10">
                     {article.tags.map((tag) => (
@@ -157,9 +149,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             </Card>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
-            {/* Related articles */}
             <Card className="border border-white/10 bg-black/40 backdrop-blur-sm shadow-lg dark:border-white/10 dark:bg-black/40 dark:backdrop-blur-sm">
               <CardContent className="p-6">
                 <h2 className="text-xl font-bold mb-4">Related Articles</h2>

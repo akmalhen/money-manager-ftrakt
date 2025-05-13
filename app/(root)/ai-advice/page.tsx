@@ -84,7 +84,6 @@ export default function AIAdvicePage() {
   };
 
   const validateForm = () => {
-    // Check if at least one income and expense has values
     const hasValidIncome = incomes.some(
       (item) => item.amount.trim() !== '' && !isNaN(parseFloat(item.amount))
     );
@@ -113,7 +112,6 @@ export default function AIAdvicePage() {
     setAdvice('');
 
     try {
-      // Format income and expenses for the API
       const formattedIncomes = incomes
         .filter((item) => item.amount.trim() !== '' && !isNaN(parseFloat(item.amount)))
         .map((item) => `${item.source || 'Income'}: Rp ${parseFloat(item.amount).toLocaleString('id-ID')}`)
@@ -143,7 +141,6 @@ export default function AIAdvicePage() {
       const data = await response.json();
       setAdvice(data.advice);
       
-      // Scroll to advice section
       setTimeout(() => {
         adviceRef.current?.scrollIntoView({ behavior: 'smooth' });
       }, 100);
@@ -157,7 +154,6 @@ export default function AIAdvicePage() {
 
   return (
     <section className="mb-6 px-2 md:px-0">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <h3 className="text-lg font-bold md:text-xl bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-indigo-600">
           AI Financial Advisor
@@ -166,11 +162,9 @@ export default function AIAdvicePage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* Input Form */}
         <div className="relative overflow-hidden rounded-xl border border-violet-500/20 bg-gradient-to-br from-violet-900/40 via-black/90 to-indigo-900/40 p-0.5 shadow-lg shadow-violet-900/20">
           <div className="relative z-10 h-full w-full bg-black/80 backdrop-blur-sm rounded-lg p-5">
             <div className="space-y-6">
-              {/* Income Section */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-base font-semibold text-white">Your Income</h3>
@@ -233,7 +227,6 @@ export default function AIAdvicePage() {
                 </div>
               </div>
 
-              {/* Expenses Section */}
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-base font-semibold text-white">Your Expenses</h3>
@@ -296,7 +289,6 @@ export default function AIAdvicePage() {
                 </div>
               </div>
 
-              {/* Financial Goals */}
               <div>
                 <h3 className="text-base font-semibold text-white mb-3">Your Financial Goals</h3>
                 <textarea
@@ -307,14 +299,12 @@ export default function AIAdvicePage() {
                 />
               </div>
 
-              {/* Error Message */}
               {error && (
                 <div className="text-red-500 text-sm bg-red-500/10 p-2 rounded-lg">
                   {error}
                 </div>
               )}
 
-              {/* Get Advice Button */}
               <button
                 onClick={getFinancialAdvice}
                 disabled={isLoading}
@@ -336,7 +326,6 @@ export default function AIAdvicePage() {
           </div>
         </div>
 
-        {/* Results Section */}
         <div 
           ref={adviceRef}
           className={`relative overflow-hidden rounded-xl border border-violet-500/20 bg-gradient-to-br from-violet-900/40 via-black/90 to-indigo-900/40 p-0.5 shadow-lg shadow-violet-900/20 ${!advice && !isLoading ? 'opacity-70' : ''}`}
