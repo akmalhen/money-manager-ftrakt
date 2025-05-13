@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Sheet,
   SheetContent,
@@ -45,7 +45,9 @@ import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { AccountType, BASE_API_URL } from "@/index";
-import { PiggyBank } from "lucide-react";
+import { PiggyBank, Upload, Loader2, ScanLine } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Label } from "@/components/ui/label";
 
 type Props = {
   accounts: AccountType[];
@@ -61,6 +63,9 @@ function AddIncomeBtn({ accounts }: Props) {
   const [date, setDate] = useState<Date>(new Date());
   const [sheetOpen, setSheetOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const [scanResults, setScanResults] = useState<any>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const addIncomeSchema = z.object({
     incomeName: z
@@ -82,6 +87,110 @@ function AddIncomeBtn({ accounts }: Props) {
       amount: 0,
     },
   });
+
+  const handleScanReceipt = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    const file = e.target.files[0];
+    setScanning(true);
+    
+    try {
+      // Convert the file to base64
+      const base64String = await convertFileToBase64(file);
+      
+      // Send the image to the OCR API
+      const response = await fetch('/api/ocr-receipt', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ image: base64String }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to scan receipt');
+      }
+      
+      const data = await response.json();
+      
+      // Try to parse the analysis result (it comes as a string from the backend)
+      try {
+        // Clean up the response to remove markdown code blocks if present
+        let cleanedResponse = data.analysis;
+        cleanedResponse = cleanedResponse.replace(/```json\s*|\s*```/g, '').trim();
+        
+        const analysisJson = JSON.parse(cleanedResponse);
+        setScanResults(analysisJson);
+        
+        // Update form values with the OCR results
+        if (analysisJson.judul && analysisJson.judul !== 'Tidak ditemukan') {
+          form.setValue('incomeName', analysisJson.judul);
+        }
+        
+        if (analysisJson.tanggal && analysisJson.tanggal !== 'Tidak ditemukan') {
+          // Try to parse the date
+          try {
+            // Convert Indonesian date format (DD-MM-YYYY) to a format JavaScript can parse
+            const dateParts = analysisJson.tanggal.split('-');
+            if (dateParts.length === 3) {
+              const day = parseInt(dateParts[0]);
+              const month = parseInt(dateParts[1]) - 1; // JavaScript months are 0-indexed
+              const year = parseInt(dateParts[2]);
+              
+              const newDate = new Date(year, month, day);
+              if (!isNaN(newDate.getTime())) {
+                form.setValue('date', newDate);
+                setDate(newDate);
+              }
+            }
+          } catch (error) {
+            console.error('Error parsing date:', error);
+          }
+        }
+        
+        if (analysisJson.subtotal && analysisJson.subtotal !== 'Tidak ditemukan') {
+          // Remove any non-numeric characters and convert to number
+          const amount = parseFloat(analysisJson.subtotal.replace(/[^0-9]/g, ''));
+          if (!isNaN(amount)) {
+            form.setValue('amount', amount);
+          }
+        }
+        
+        toast({
+          description: 'Receipt scanned successfully!',
+          variant: 'success',
+        });
+      } catch (error) {
+        console.error('Error parsing analysis result:', error);
+        toast({
+          description: 'Could not parse the receipt data. Please enter details manually.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Error scanning receipt:', error);
+      toast({
+        description: 'Failed to scan receipt. Please try again or enter details manually.',
+        variant: 'destructive',
+      });
+    } finally {
+      setScanning(false);
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+  
+  // Helper function to convert file to base64
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const onSubmit = async (values: z.infer<typeof addIncomeSchema>) => {
     setSubmitting(true);
@@ -147,6 +256,54 @@ function AddIncomeBtn({ accounts }: Props) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-4"
               >
+                {/* Receipt Scanning */}
+                <div className="mb-2">
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="receipt-upload" className="text-sm font-medium">
+                      Scan Photo
+                    </Label>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="text-xs text-muted-foreground cursor-help">
+                            <ScanLine className="h-4 w-4" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Upload a receipt image to automatically fill the form</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="receipt-upload"
+                      accept="image/*"
+                      onChange={handleScanReceipt}
+                      ref={fileInputRef}
+                      className="hidden"
+                      disabled={scanning}
+                    />
+                    <label
+                      htmlFor="receipt-upload"
+                      className={`flex items-center justify-center gap-2 w-full py-2 px-3 border border-dashed rounded-md cursor-pointer transition-colors ${scanning ? 'bg-black/20 border-white/20' : 'bg-black/10 border-white/10 hover:border-white/30 hover:bg-black/20'}`}
+                    >
+                      {scanning ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin text-white/70" />
+                          <span className="text-sm text-white/70">Processing receipt...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="h-4 w-4 text-white/70" />
+                          <span className="text-sm text-white/70">Upload receipt image</span>
+                        </>
+                      )}
+                    </label>
+                  </div>
+                </div>
+
                 <FormField
                   control={form.control}
                   name="incomeName"
