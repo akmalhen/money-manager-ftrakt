@@ -3,6 +3,45 @@ import { NextRequest, NextResponse } from "next/server";
 import User from "@/lib/models/user.model";
 import Account from "@/lib/models/account.model";
 import Income from "@/lib/models/income.model";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/options";
+
+export async function GET() {
+  try {
+    await connectToDB();
+    
+    const session = await getServerSession(authOptions);
+    
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+    
+    // @ts-ignore - Next-auth types don't match our user structure
+    const userId = session.user.id;
+    
+    if (!userId) {
+      console.error("User ID not found in session:", session);
+      return NextResponse.json(
+        { error: "User ID not found in session" },
+        { status: 400 }
+      );
+    }
+    const incomes = await Income.find({ user: userId })
+      .populate('account', 'name')
+      .sort({ date: -1 });
+      
+    return NextResponse.json(incomes, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching incomes:', error);
+    return NextResponse.json(
+      { message: "Error fetching incomes" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: NextRequest) {
   const { name, date, amount, userId, accountId } = await req.json();

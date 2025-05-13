@@ -44,46 +44,45 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { AccountType, BASE_API_URL, CategoryType } from "@/index";
-import { WalletCards, Upload, Loader2, ScanLine } from "lucide-react";
+import { AccountType, BASE_API_URL } from "@/index";
+import { PiggyBank, Upload, Loader2, ScanLine } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Label } from "@/components/ui/label";
 
 type Props = {
   accounts: AccountType[];
-  categories: CategoryType[];
 };
 
-function AddExpenseBtn({ accounts, categories }: Props) {
+function AddIncomeBtn({ accounts }: Props) {
   const session = useSession();
   const router = useRouter();
   const { toast } = useToast();
 
   const userId = session?.data?.user?.id;
 
+  const [date, setDate] = useState<Date>(new Date());
   const [sheetOpen, setSheetOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [scanning, setScanning] = useState(false);
   const [scanResults, setScanResults] = useState<any>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const addExpenseSchema = z.object({
-    expenseName: z
+  const addIncomeSchema = z.object({
+    incomeName: z
       .string()
-      .min(4, { message: "Expense name should be atleast 4 characters" })
-      .max(30, { message: "Expense name should be less than 30 characters" }),
+      .min(4, { message: "Income name should be atleast 4 characters" })
+      .max(30, { message: "Income name should be less than 30 characters" }),
     date: z.date(),
     amount: z.coerce
       .number()
-      .min(1, { message: "Expense amount should be greater than 0" }),
+      .min(1, { message: "Income amount should be greater than 0" }),
     account: z.string(),
-    category: z.string(),
   });
 
-  const form = useForm<z.infer<typeof addExpenseSchema>>({
-    resolver: zodResolver(addExpenseSchema),
+  const form = useForm<z.infer<typeof addIncomeSchema>>({
+    resolver: zodResolver(addIncomeSchema),
     defaultValues: {
-      expenseName: "",
+      incomeName: "",
       date: new Date(),
       amount: 0,
     },
@@ -125,7 +124,7 @@ function AddExpenseBtn({ accounts, categories }: Props) {
         
         // Update form values with the OCR results
         if (analysisJson.judul && analysisJson.judul !== 'Tidak ditemukan') {
-          form.setValue('expenseName', analysisJson.judul);
+          form.setValue('incomeName', analysisJson.judul);
         }
         
         if (analysisJson.tanggal && analysisJson.tanggal !== 'Tidak ditemukan') {
@@ -193,6 +192,7 @@ function AddExpenseBtn({ accounts, categories }: Props) {
             // If we have a valid date, update the form
             if (!isNaN(newDate.getTime())) {
               form.setValue('date', newDate);
+              setDate(newDate);
             }
           } catch (error) {
             console.error('Error parsing date:', error);
@@ -243,20 +243,19 @@ function AddExpenseBtn({ accounts, categories }: Props) {
     });
   };
 
-  const onSubmit = async (values: z.infer<typeof addExpenseSchema>) => {
+  const onSubmit = async (values: z.infer<typeof addIncomeSchema>) => {
     setSubmitting(true);
     try {
-      const res = await fetch(`${BASE_API_URL}/api/expense`, {
+      const res = await fetch(`${BASE_API_URL}/api/income`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: values.expenseName,
+          name: values.incomeName,
           date: values.date,
           amount: values.amount,
           accountId: values.account,
-          categoryId: values.category,
           userId: userId,
         }),
       });
@@ -292,14 +291,14 @@ function AddExpenseBtn({ accounts, categories }: Props) {
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
           <Button className="flex w-[140px] items-center gap-2 border-2 border-foreground bg-transparent text-foreground duration-300 hover:text-background">
-            <WalletCards className="h-10 w-10" /> New Expense
+            <PiggyBank className="h-10 w-10" /> New Income
           </Button>
         </SheetTrigger>
         <SheetContent className="space-y-2">
           <SheetHeader className="text-left">
-            <SheetTitle>Add a new expense</SheetTitle>
+            <SheetTitle>Add a new income</SheetTitle>
             <SheetDescription>
-              Create a new expense inside your financial tracker.
+              Create a new income inside your financial tracker.
             </SheetDescription>
           </SheetHeader>
           <div>
@@ -312,7 +311,7 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                 <div className="mb-2">
                   <div className="flex items-center justify-between mb-2">
                     <Label htmlFor="receipt-upload" className="text-sm font-medium">
-                      Scan Receipt
+                      Scan Photo
                     </Label>
                     <TooltipProvider>
                       <Tooltip>
@@ -358,7 +357,7 @@ function AddExpenseBtn({ accounts, categories }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="expenseName"
+                  name="incomeName"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Name</FormLabel>
@@ -395,64 +394,17 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent align="start" className="z-50 w-auto p-0">
+                        <PopoverContent align="start" className=" w-auto p-0">
                           <Calendar
                             mode="single"
                             captionLayout="dropdown-buttons"
                             selected={field.value}
-                            onSelect={(date) => {
-                              field.onChange(date);
-                              // Close the popover after selection
-                              document.body.click();
-                            }}
+                            onSelect={field.onChange}
                             fromYear={2000}
                             toYear={2025}
-                            className="pointer-events-auto"
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue=""
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {categories.length ? (
-                            categories.map((category: any) => (
-                              <SelectItem
-                                key={category._id}
-                                value={category._id.toString()}
-                                style={{ color: category.color }}
-                              >
-                                {category.name}
-                              </SelectItem>
-                            ))
-                          ) : (
-                            <SelectItem
-                              value="novalue"
-                              disabled
-                              className="flex items-center justify-center"
-                            >
-                              No categories yet
-                            </SelectItem>
-                          )}
-                        </SelectContent>
-                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -503,28 +455,11 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                   control={form.control}
                   name="amount"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Amount</FormLabel>
-                      <FormControl>
-                        <div className="relative flex items-center">
-                          <span className="absolute ml-2">Rp</span>
-                          <Input
-                            {...field}
-                            min={0}
-                            type="number"
-                            autoComplete="off"
-                            className="pl-8"
-                          />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
                 />
 
                 <SheetFooter>
                   <Button type="submit" disabled={submitting}>
-                    {submitting ? "Adding..." : "Add Expense"}
+                    {submitting ? "Adding..." : "Add Income"}
                   </Button>
                 </SheetFooter>
               </form>
@@ -536,4 +471,4 @@ function AddExpenseBtn({ accounts, categories }: Props) {
   );
 }
 
-export default AddExpenseBtn;
+export default AddIncomeBtn;

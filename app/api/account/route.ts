@@ -5,6 +5,45 @@ import User from "@/lib/models/user.model";
 import Account from "@/lib/models/account.model";
 import Income from "@/lib/models/income.model";
 import Expense from "@/lib/models/expense.model";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]/options";
+
+export async function GET() {
+  try {
+    await connectToDB();
+    
+    const session = await getServerSession(authOptions);
+    
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { error: "Authentication required" },
+        { status: 401 }
+      );
+    }
+    
+    // @ts-ignore - Next-auth types don't match our user structure
+    const userId = session.user.id;
+    
+    if (!userId) {
+      console.error("User ID not found in session:", session);
+      return NextResponse.json(
+        { error: "User ID not found in session" },
+        { status: 400 }
+      );
+    }
+    
+    const accounts = await Account.find({ user: userId })
+      .sort({ name: 1 });
+      
+    return NextResponse.json(accounts, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching accounts:', error);
+    return NextResponse.json(
+      { message: "Error fetching accounts" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(req: NextRequest) {
   const { name, userId, balance, color } = await req.json();

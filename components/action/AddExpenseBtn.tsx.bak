@@ -61,6 +61,7 @@ function AddExpenseBtn({ accounts, categories }: Props) {
 
   const userId = session?.data?.user?.id;
 
+  const [date, setDate] = useState<Date>(new Date());
   const [sheetOpen, setSheetOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [scanning, setScanning] = useState(false);
@@ -193,6 +194,7 @@ function AddExpenseBtn({ accounts, categories }: Props) {
             // If we have a valid date, update the form
             if (!isNaN(newDate.getTime())) {
               form.setValue('date', newDate);
+              setDate(newDate);
             }
           } catch (error) {
             console.error('Error parsing date:', error);
@@ -291,8 +293,8 @@ function AddExpenseBtn({ accounts, categories }: Props) {
     <div>
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
         <SheetTrigger asChild>
-          <Button className="flex w-[140px] items-center gap-2 border-2 border-foreground bg-transparent text-foreground duration-300 hover:text-background">
-            <WalletCards className="h-10 w-10" /> New Expense
+          <Button className="flex  w-[140px] items-center gap-2 border-2 border-foreground bg-transparent text-foreground duration-300 hover:text-background">
+            <WalletCards className="h-4 w-4" /> New Expense
           </Button>
         </SheetTrigger>
         <SheetContent className="space-y-2">
@@ -384,75 +386,29 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                             variant={"outline"}
                             className={cn(
                               "w-full justify-start text-left font-normal",
-                              !field.value && "text-muted-foreground"
+                              !date && "text-muted-foreground",
                             )}
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? (
-                              format(field.value, "PPP")
+                            {date ? (
+                              format(date, "PPP")
                             ) : (
                               <span>Pick a date</span>
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent align="start" className="z-50 w-auto p-0">
+                        <PopoverContent align="start" className=" w-auto p-0">
                           <Calendar
                             mode="single"
                             captionLayout="dropdown-buttons"
-                            selected={field.value}
-                            onSelect={(date) => {
-                              field.onChange(date);
-                              // Close the popover after selection
-                              document.body.click();
-                            }}
+                            selected={date}
+                            onSelect={field.onChange}
+                            onDayClick={setDate}
                             fromYear={2000}
                             toYear={2025}
-                            className="pointer-events-auto"
                           />
                         </PopoverContent>
                       </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue=""
-                        value={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a category" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {categories.length ? (
-                            categories.map((category: any) => (
-                              <SelectItem
-                                key={category._id}
-                                value={category._id.toString()}
-                                style={{ color: category.color }}
-                              >
-                                {category.name}
-                              </SelectItem>
-                            ))
-                          ) : (
-                            <SelectItem
-                              value="novalue"
-                              disabled
-                              className="flex items-center justify-center"
-                            >
-                              No categories yet
-                            </SelectItem>
-                          )}
-                        </SelectContent>
-                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -491,6 +447,47 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                               className="flex items-center justify-center"
                             >
                               No accounts yet
+                            </SelectItem>
+                          )}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue=""
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {categories.length ? (
+                            categories.map((category: CategoryType) => (
+                              <SelectItem
+                                key={category._id}
+                                value={category?._id.toString()}
+                              >
+                                {category.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem
+                              value="novalue"
+                              disabled
+                              className="flex items-center justify-center"
+                            >
+                              No categories yet
                             </SelectItem>
                           )}
                         </SelectContent>

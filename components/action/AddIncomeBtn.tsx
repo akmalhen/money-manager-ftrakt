@@ -60,7 +60,6 @@ function AddIncomeBtn({ accounts }: Props) {
 
   const userId = session?.data?.user?.id;
 
-  const [date, setDate] = useState<Date>(new Date());
   const [sheetOpen, setSheetOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [scanning, setScanning] = useState(false);
@@ -130,18 +129,68 @@ function AddIncomeBtn({ accounts }: Props) {
         if (analysisJson.tanggal && analysisJson.tanggal !== 'Tidak ditemukan') {
           // Try to parse the date
           try {
-            // Convert Indonesian date format (DD-MM-YYYY) to a format JavaScript can parse
-            const dateParts = analysisJson.tanggal.split('-');
-            if (dateParts.length === 3) {
-              const day = parseInt(dateParts[0]);
-              const month = parseInt(dateParts[1]) - 1; // JavaScript months are 0-indexed
-              const year = parseInt(dateParts[2]);
-              
-              const newDate = new Date(year, month, day);
-              if (!isNaN(newDate.getTime())) {
-                form.setValue('date', newDate);
-                setDate(newDate);
+            // First try to use the Date constructor directly (handles ISO format)
+            let newDate = new Date(analysisJson.tanggal);
+            
+            // If that doesn't work, try to parse the date manually
+            if (isNaN(newDate.getTime())) {
+              // Check if the date uses '-' or '/' as separator
+              let separator = '';
+              if (analysisJson.tanggal.includes('-')) {
+                separator = '-';
+              } else if (analysisJson.tanggal.includes('/')) {
+                separator = '/';
+              } else if (analysisJson.tanggal.includes('.')) {
+                separator = '.';
               }
+              
+              if (separator) {
+                const dateParts = analysisJson.tanggal.split(separator);
+                
+                if (dateParts.length === 3) {
+                  let day: number, month: number, year: number;
+                  
+                  // Try to determine the format based on the values
+                  const part0 = parseInt(dateParts[0]);
+                  const part1 = parseInt(dateParts[1]);
+                  const part2 = parseInt(dateParts[2]);
+                  
+                  // If first part is > 31, it's likely a year (YYYY-MM-DD)
+                  if (part0 > 31) {
+                    year = part0;
+                    month = part1 - 1; // JS months are 0-indexed
+                    day = part2;
+                  }
+                  // If last part is > 31, it's likely a year (DD-MM-YYYY)
+                  else if (part2 > 31) {
+                    day = part0;
+                    month = part1 - 1;
+                    year = part2;
+                  }
+                  // If middle part > 12, it might be a day in MM-DD-YYYY format
+                  else if (part1 > 12) {
+                    month = part0 - 1;
+                    day = part1;
+                    year = part2;
+                  }
+                  // Default to DD-MM-YYYY format
+                  else {
+                    day = part0;
+                    month = part1 - 1;
+                    year = part2;
+                  }
+                  
+                  // Handle 2-digit years (assuming 20xx for simplicity)
+                  const fullYear = year < 100 ? 2000 + year : year;
+                  
+                  newDate = new Date(fullYear, month, day);
+                }
+              }
+            }
+            
+            // If we have a valid date, update the form
+            if (!isNaN(newDate.getTime())) {
+              form.setValue('date', newDate);
             }
           } catch (error) {
             console.error('Error parsing date:', error);
@@ -332,7 +381,7 @@ function AddIncomeBtn({ accounts }: Props) {
                             variant={"outline"}
                             className={cn(
                               "w-full justify-start text-left font-normal",
-                              !date && "text-muted-foreground",
+                              !field.value && "text-muted-foreground"
                             )}
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
@@ -343,17 +392,19 @@ function AddIncomeBtn({ accounts }: Props) {
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent align="start" className=" w-auto p-0">
+                        <PopoverContent align="start" className="z-50 w-auto p-0">
                           <Calendar
                             mode="single"
                             captionLayout="dropdown-buttons"
                             selected={field.value}
-                            onSelect={(selectedDate) => {
-                              field.onChange(selectedDate);
-                              setDate(selectedDate || new Date());
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              // Close the popover after selection
+                              document.body.click();
                             }}
                             fromYear={2000}
                             toYear={2025}
+                            className="pointer-events-auto"
                           />
                         </PopoverContent>
                       </Popover>
