@@ -40,14 +40,12 @@ async function CategoryPage() {
   return (
     <section className="mb-6 px-2 md:px-0">
       <div className="w-full space-y-6 md:mb-6">
-        {/* Header */}
         <div className="flex items-center gap-3 mb-2">
           <h3 className="text-lg font-bold md:text-xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-600">Category Management</h3>
           <div className="h-px flex-grow bg-gradient-to-r from-purple-500/50 to-transparent"></div>
         </div>
         
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:grid-rows-4">
-          {/* Budget Category Cards */}
           <div className="relative overflow-hidden rounded-xl border border-purple-500/20 bg-gradient-to-br from-purple-900/40 via-black/90 to-indigo-900/40 p-0.5 shadow-lg shadow-purple-900/20 lg:col-span-4 lg:row-span-4">
             <div className="relative z-10 h-full w-full bg-black rounded-lg p-5">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/10">
@@ -100,7 +98,6 @@ async function CategoryPage() {
             </div>
           </div>
         </div>
-          {/* Category Activity Tables */}
           <div className="rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 shadow-lg lg:col-span-full lg:col-start-5 lg:row-span-2">
             <div className="flex items-center gap-3 mb-4 pb-3 border-b border-white/10">
               <div className="h-6 w-1.5 bg-gradient-to-b from-blue-400 to-indigo-600 rounded-full"></div>
@@ -121,7 +118,6 @@ async function CategoryPage() {
               <h3 className="text-lg font-bold">Category Insights</h3>
             </div>
 
-            {/* Line Charts Insights */}
             <div className="w-full lg:h-[680px]">
               {lineChartData.length ? (
                 <Tabs
