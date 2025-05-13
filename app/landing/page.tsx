@@ -17,7 +17,6 @@ import {
   Lock,
 } from "lucide-react"
 
-// Testimonial data with avatars
 const testimonials = [
   {
     text: "Money Manager has completely changed how I track my finances. The visualizations make it easy to spot trends and adjust my spending habits.",
@@ -39,7 +38,6 @@ const testimonials = [
   },
 ]
 
-// Enhanced feature data
 const features = [
   {
     icon: <BarChart4 className="h-10 w-10" />,
@@ -67,7 +65,6 @@ const features = [
   },
 ]
 
-// How it works steps
 const steps = [
   {
     icon: <Sparkles className="h-8 w-8" />,
@@ -98,19 +95,16 @@ const steps = [
 export default function LandingPage() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
 
-  // Refs for scrolling
   const featuresRef = useRef<HTMLElement>(null)
   const howItWorksRef = useRef<HTMLElement>(null)
   const testimonialsRef = useRef<HTMLElement>(null)
 
-  // Scroll to section function
   const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
     if (ref.current) {
       ref.current.scrollIntoView({ behavior: "smooth" })
     }
   }
 
-  // Auto-rotate testimonials
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
@@ -121,10 +115,8 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden text-white bg-black">
-      {/* Particle Background */}
       <ParticleBackground />
 
-      {/* Header/Navigation */}
       <header className="relative z-10 p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DollarSign className="h-8 w-8 text-emerald-400" />
@@ -157,7 +149,6 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
       <main className="relative z-10">
         <section className="py-20 px-4 max-w-6xl mx-auto text-center">
           <motion.h1
@@ -203,7 +194,6 @@ export default function LandingPage() {
             </button>
           </motion.div>
 
-          {/* Dashboard Preview */}
           <motion.div
             className="relative max-w-4xl mx-auto"
             initial={{ opacity: 0, y: 40 }}
@@ -227,7 +217,6 @@ export default function LandingPage() {
           </motion.div>
         </section>
 
-        {/* Features - Enhanced with modern design */}
         <section id="features" ref={featuresRef} className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
@@ -292,9 +281,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* How It Works Section - Enhanced with modern design */}
         <section id="how-it-works" ref={howItWorksRef} className="py-20 px-4 relative">
-          {/* Background gradient */}
           <div className="absolute inset-0 bg-gradient-to-b from-black via-emerald-950/10 to-black -z-10"></div>
 
           <div className="max-w-6xl mx-auto">
@@ -331,7 +318,6 @@ export default function LandingPage() {
             </div>
 
             <div className="relative">
-              {/* Connecting line */}
               <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-amber-500 to-emerald-500 transform -translate-y-1/2 hidden md:block"></div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
@@ -354,7 +340,6 @@ export default function LandingPage() {
                       <p className="text-gray-300">{step.description}</p>
                     </div>
 
-                    {/* Step number */}
                     <div className="absolute -top-4 -right-4 w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-sm shadow-lg">
                       {index + 1}
                     </div>
@@ -365,9 +350,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Testimonials - Enhanced with modern design */}
         <section id="testimonials" ref={testimonialsRef} className="py-20 px-4 relative">
-          {/* Background elements */}
           <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
             <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl"></div>
             <div className="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-blue-500/10 blur-3xl"></div>
@@ -444,13 +427,11 @@ export default function LandingPage() {
                     </div>
                   </div>
 
-                  {/* Decorative elements */}
                   <div className="absolute -top-4 -left-4 text-4xl text-emerald-500 opacity-50">-</div>
                   <div className="absolute -bottom-4 -right-4 text-4xl text-emerald-500 opacity-50">-</div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Navigation arrows */}
               <div className="flex justify-between absolute top-1/2 left-0 right-0 transform -translate-y-1/2 px-4 z-20">
                 <button
                   onClick={() =>
@@ -499,7 +480,6 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-emerald-900/30 to-teal-900/30 p-12 rounded-2xl backdrop-blur-md border border-emerald-500/20">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Finances?</h2>
@@ -517,7 +497,6 @@ export default function LandingPage() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="relative z-10 py-12 px-4 border-t border-white/10">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>

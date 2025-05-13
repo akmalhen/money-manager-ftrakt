@@ -49,7 +49,6 @@ export default function PredictPage() {
   const [hasTransactions, setHasTransactions] = useState<boolean | null>(null)
   const [predictions, setPredictions] = useState<PredictionData[]>([])
   
-  // Check if user has transactions
   useEffect(() => {
     if (status === "authenticated") {
       checkTransactions()
@@ -61,8 +60,7 @@ export default function PredictPage() {
       setIsLoading(true)
       setError(null)
       
-      // Make a POST request to our prediction API
-      // This will check if there are enough transactions without generating predictions
+
       const response = await fetch('/api/predict', {
         method: 'POST',
         headers: {
@@ -92,7 +90,6 @@ export default function PredictPage() {
       setIsLoading(true)
       setError(null)
       
-      // Make a POST request to our prediction API
       const response = await fetch('/api/predict', {
         method: 'POST',
         headers: {
@@ -174,7 +171,6 @@ export default function PredictPage() {
     }
   }
   
-  // Loading state
   if (status === "loading" || isLoading && hasTransactions === null) {
     return (
       <div className="container mx-auto py-6">
@@ -190,7 +186,6 @@ export default function PredictPage() {
     )
   }
   
-  // Not authenticated
   if (status === "unauthenticated") {
     return (
       <div className="container mx-auto py-6">

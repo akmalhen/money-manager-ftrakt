@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Brain, Trophy, Award, BookOpen, Loader2 } from "lucide-react"
 import { useSession } from "next-auth/react"
 
-// Dynamically import components to avoid hydration issues
 const QuizCard = dynamic(() => import('@/components/quiz/quiz-card'), { ssr: false })
 const QuizResults = dynamic(() => import('@/components/quiz/quiz-results'), { ssr: false })
 const BadgesShowcase = dynamic(() => import('@/components/quiz/badges-showcase'), { ssr: false })
@@ -15,10 +14,8 @@ const UserLevelCard = dynamic(() => import('@/components/quiz/user-level-card'),
 const UserSwitch = dynamic(() => import('@/components/UserSwitch'), { ssr: false })
 
 export default function QuizPage() {
-  // Session state
   const { status: sessionStatus } = useSession()
   
-  // Component state
   const [activeTab, setActiveTab] = useState("quiz")
   const [quizState, setQuizState] = useState<"start" | "in-progress" | "completed">("start")
   const [quizScore, setQuizScore] = useState({ score: 0, total: 0 })
@@ -27,20 +24,16 @@ export default function QuizPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isStoreReady, setIsStoreReady] = useState(false)
 
-  // Initialize store on client side only
   useEffect(() => {
     const initStore = async () => {
       try {
-        // Dynamically import the quiz store
         const quizModule = await import('@/lib/store/quiz')
         const { fetchUserProgress } = quizModule.useQuiz.getState()
         
-        // Fetch user data if session is ready
         if (sessionStatus !== 'loading') {
           await fetchUserProgress()
         }
         
-        // Mark store as ready
         setIsStoreReady(true)
       } catch (error) {
         console.error("Failed to initialize quiz store:", error)
@@ -203,7 +196,6 @@ export default function QuizPage() {
     }
   }
 
-  // Show loading indicator while session and data are loading
   if (sessionStatus === 'loading' || isLoading || !isStoreReady) {
     return (
       <div className="flex items-center justify-center h-[60vh]">

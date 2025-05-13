@@ -18,7 +18,6 @@ async function TransferPage() {
 
   return (
     <section className="mb-6 px-2 md:px-0">
-      {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <h3 className="text-lg font-bold md:text-xl bg-clip-text text-transparent bg-gradient-to-r from-amber-400 to-orange-600">Transfer Management</h3>
         <div className="h-px flex-grow bg-gradient-to-r from-amber-500/50 to-transparent"></div>

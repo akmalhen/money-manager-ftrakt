@@ -96,14 +96,12 @@ export default function TasksPage() {
   const [editDatePickerOpen, setEditDatePickerOpen] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
 
-  // Fetch tasks on component mount
   useEffect(() => {
     if (userId) {
       fetchTasks()
     }
   }, [userId])
 
-  // Fetch tasks from API
   const fetchTasks = async () => {
     try {
       setIsLoading(true)
@@ -115,7 +113,6 @@ export default function TasksPage() {
       
       const tasks = await response.json()
       
-      // Organize tasks into columns
       const todoTasks = tasks.filter((task: Task) => task.status === "todo")
       const inProgressTasks = tasks.filter((task: Task) => task.status === "in-progress")
       const doneTasks = tasks.filter((task: Task) => task.status === "done")
@@ -145,32 +142,26 @@ export default function TasksPage() {
       if (!a.deadline) return 1
       if (!b.deadline) return -1
 
-      // Sort by deadline (ascending)
       return new Date(a.deadline).getTime() - new Date(b.deadline).getTime()
     })
   }
 
-  // Handle drag and drop
   const onDragEnd = async (result: any) => {
     const { destination, source, draggableId } = result
 
-    // If there's no destination or the item is dropped in the same place
     if (!destination || (destination.droppableId === source.droppableId && destination.index === source.index)) {
       return
     }
 
-    // Find the source and destination columns
     const sourceColumn = columns.find((col) => col.id === source.droppableId)
     const destColumn = columns.find((col) => col.id === destination.droppableId)
 
     if (!sourceColumn || !destColumn) return
 
-    // Create new arrays for the columns
     const newColumns = [...columns]
     const sourceColIndex = newColumns.findIndex((col) => col.id === source.droppableId)
     const destColIndex = newColumns.findIndex((col) => col.id === destination.droppableId)
 
-    // If moving within the same column
     if (source.droppableId === destination.droppableId) {
       const newTasks = Array.from(sourceColumn.tasks)
       const [movedTask] = newTasks.splice(source.index, 1)
@@ -183,10 +174,8 @@ export default function TasksPage() {
       
       setColumns(newColumns)
     } else {
-      // Moving to a different column
       const sourceTasks = Array.from(sourceColumn.tasks)
       
-      // Find the task by draggableId
       const taskToMove = sourceColumn.tasks.find(task => task._id === draggableId);
       
       if (!taskToMove) {
@@ -194,11 +183,9 @@ export default function TasksPage() {
         return;
       }
       
-      // Remove task from source column
       const [movedTask] = sourceTasks.splice(source.index, 1)
       const destTasks = Array.from(destColumn.tasks)
       
-      // Update task status in database
       try {
         setActionLoading(true);
         console.log("Updating task status:", taskToMove._id, "to", destination.droppableId);
@@ -219,7 +206,6 @@ export default function TasksPage() {
           throw new Error("Failed to update task status: " + (errorData.error || response.statusText))
         }
         
-        // Update local state with new status
         const updatedTask = { ...movedTask, status: destination.droppableId }
         destTasks.splice(destination.index, 0, updatedTask)
 
@@ -246,7 +232,6 @@ export default function TasksPage() {
           description: "Failed to update task status. Please try again.",
           variant: "destructive",
         })
-        // Revert the drag if the API call fails
         fetchTasks()
       } finally {
         setActionLoading(false);
@@ -254,7 +239,6 @@ export default function TasksPage() {
     }
   }
 
-  // Handle adding a new task
   const handleAddTask = async () => {
     if (!userId) {
       toast({
@@ -297,7 +281,6 @@ export default function TasksPage() {
       
       const createdTask = await response.json()
       
-      // Update local state
       const newColumns = columns.map((column) => {
         if (column.id === createdTask.status) {
           return {
@@ -335,7 +318,6 @@ export default function TasksPage() {
     }
   }
 
-  // Handle editing a task
   const handleEditTask = async () => {
     if (!userId) {
       toast({
@@ -377,7 +359,6 @@ export default function TasksPage() {
       
       const updatedTask = await response.json()
       
-      // Update local state
       const newColumns = columns.map((column) => {
         return {
           ...column,
@@ -411,7 +392,6 @@ export default function TasksPage() {
     }
   }
 
-  // Handle deleting a task
   const handleDeleteTask = async () => {
     if (!userId || !taskToDelete) return
 
@@ -428,7 +408,6 @@ export default function TasksPage() {
         throw new Error("Failed to delete task")
       }
       
-      // Update local state
       const newColumns = columns.map((column) => {
         if (column.id === columnId) {
           return {
@@ -459,25 +438,21 @@ export default function TasksPage() {
     }
   }
 
-  // Open edit dialog for a task
   const openEditDialog = (task: Task) => {
     setEditingTask({ ...task })
     setIsEditDialogOpen(true)
   }
 
-  // Open delete dialog for a task
   const openDeleteDialog = (taskId: string, columnId: string) => {
     setTaskToDelete({ taskId, columnId })
     setIsDeleteDialogOpen(true)
   }
 
-  // Handle date selection for new task
   const handleDateSelect = (date: Date | undefined) => {
     setNewTask({ ...newTask, deadline: date })
     setDatePickerOpen(false)
   }
 
-  // Handle date selection for editing task
   const handleEditDateSelect = (date: Date | undefined) => {
     if (editingTask) {
       setEditingTask({ ...editingTask, deadline: date })
@@ -485,12 +460,10 @@ export default function TasksPage() {
     setEditDatePickerOpen(false)
   }
 
-  // Handle moving a task to a specific column
   const handleMoveTask = async (taskId: string, currentColumnId: string, targetColumnId: string) => {
     if (currentColumnId === targetColumnId || actionLoading) return;
 
     try {
-      // Find the task
       const sourceColumn = columns.find((col) => col.id === currentColumnId);
       if (!sourceColumn) {
         console.error("Source column not found:", currentColumnId);
@@ -503,10 +476,8 @@ export default function TasksPage() {
         return;
       }
 
-      // Set loading state
       setActionLoading(true);
       
-      // Optimistically update the UI first for a more responsive feel
       const sourceColIndex = columns.findIndex((col) => col.id === currentColumnId);
       const destColIndex = columns.findIndex((col) => col.id === targetColumnId);
       
@@ -516,7 +487,6 @@ export default function TasksPage() {
       
       const newColumns = [...columns];
       
-      // Remove from source column
       const sourceTasks = Array.from(newColumns[sourceColIndex].tasks);
       const taskIndex = sourceTasks.findIndex(t => t._id === taskId);
       const [movedTask] = sourceTasks.splice(taskIndex, 1);
