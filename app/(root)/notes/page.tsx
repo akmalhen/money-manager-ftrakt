@@ -12,7 +12,6 @@ import { useSession } from "next-auth/react";
 import { BASE_API_URL } from "@/index";
 import { format } from "date-fns";
 
-// Define the Note type
 interface Note {
   _id: string;
   title: string;
@@ -62,7 +61,6 @@ export default function NotesPage() {
     }
   }, [session, toast]);
 
-  // Filter notes based on search query
   const filteredNotes = notes.filter(
     (note) =>
       note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -70,17 +68,14 @@ export default function NotesPage() {
       note.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // Separate pinned and unpinned notes
   const pinnedNotes = filteredNotes.filter((note) => note.isPinned);
   const unpinnedNotes = filteredNotes.filter((note) => !note.isPinned);
 
-  // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return format(date, "MMM d, yyyy");
   };
 
-  // Handle adding a new note
   const handleAddNote = async (newNote: Omit<Note, "_id" | "createdAt" | "updatedAt" | "isPinned" | "user">) => {
     try {
       const response = await fetch(`${BASE_API_URL}/api/notes`, {
@@ -97,7 +92,6 @@ export default function NotesPage() {
         throw new Error(data.message || "Failed to create note");
       }
 
-      // Add the new note to the state
       setNotes((prev) => [data.note, ...prev]);
 
       toast({
@@ -114,7 +108,6 @@ export default function NotesPage() {
     }
   };
 
-  // Handle toggling pin status
   const handleTogglePin = async (id: string) => {
     try {
       const noteToUpdate = notes.find((note) => note._id === id);
@@ -136,7 +129,6 @@ export default function NotesPage() {
         throw new Error(data.message || "Failed to update note");
       }
 
-      // Update the note in state
       setNotes((prev) =>
         prev.map((note) =>
           note._id === id ? { ...note, isPinned: !note.isPinned } : note
@@ -152,7 +144,6 @@ export default function NotesPage() {
     }
   };
 
-  // Handle editing a note
   const handleEditNote = async (id: string, updatedNote: Partial<Note>) => {
     try {
       const response = await fetch(`${BASE_API_URL}/api/notes/${id}`, {
@@ -169,7 +160,6 @@ export default function NotesPage() {
         throw new Error(data.message || "Failed to update note");
       }
 
-      // Update the note in state
       setNotes((prev) =>
         prev.map((note) => (note._id === id ? { ...note, ...updatedNote } : note))
       );
@@ -188,7 +178,6 @@ export default function NotesPage() {
     }
   };
 
-  // Handle deleting a note
   const handleDeleteNote = async (id: string) => {
     try {
       const response = await fetch(`${BASE_API_URL}/api/notes/${id}`, {
@@ -200,7 +189,6 @@ export default function NotesPage() {
         throw new Error(data.message || "Failed to delete note");
       }
 
-      // Remove the note from state
       setNotes((prev) => prev.filter((note) => note._id !== id));
 
       toast({
@@ -262,7 +250,6 @@ export default function NotesPage() {
         </div>
       ) : (
         <>
-          {/* Pinned Notes Section */}
           {pinnedNotes.length > 0 && (
             <>
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -289,7 +276,6 @@ export default function NotesPage() {
             </>
           )}
 
-          {/* All Notes Section */}
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <span className="inline-block w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
             All Notes
@@ -321,7 +307,6 @@ export default function NotesPage() {
             </CreateNoteDialog>
           </div>
 
-          {/* Empty state */}
           {filteredNotes.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12">
               <div className="bg-muted/30 p-4 rounded-full mb-4">

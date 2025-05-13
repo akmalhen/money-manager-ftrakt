@@ -9,19 +9,17 @@ export default function PomodoroPage() {
   return (
     <section className="mb-6 px-2 md:px-0">
       <div className="space-y-6">
-        {/* Header */}
         <div className="flex items-center gap-3 mb-2">
           <h3 className="text-lg font-bold md:text-xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-600">Pomodoro Timer</h3>
           <div className="h-px flex-grow bg-gradient-to-r from-purple-500/50 to-transparent"></div>
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Timer Column */}
+
           <div className="flex flex-col items-center justify-center">
             <PomodoroTimer />
           </div>
 
-          {/* Info Column */}
           <div className="space-y-6">
             <Card className="border border-white/10 bg-black/40 backdrop-blur-sm shadow-lg dark:border-white/10 dark:bg-black/40 dark:backdrop-blur-sm">
               <CardContent className="p-6">
