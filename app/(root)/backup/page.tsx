@@ -64,36 +64,65 @@ export default function BackupPage() {
       })
       return
     }
-
+  
     try {
       setIsLoading(true)
       
       let exportData = { expenses: [], incomes: [], accounts: [], categories: [], tasks: [] }
       
+      // Fetch expenses
       try {
-        const exportRes = await fetch('/api/export')
-        if (exportRes.ok) {
-          const data = await exportRes.json()
-          exportData = {
-            ...exportData,
-            expenses: data.expenses || [],
-            incomes: data.incomes || [],
-            accounts: data.accounts || [],
-            categories: data.categories || []
-          }
-          console.log('Successfully fetched export data:', {
-            expensesCount: data.expenses?.length || 0,
-            incomesCount: data.incomes?.length || 0,
-            accountsCount: data.accounts?.length || 0,
-            categoriesCount: data.categories?.length || 0
-          })
+        const expensesRes = await fetch('/api/expense')
+        if (expensesRes.ok) {
+          exportData.expenses = await expensesRes.json()
+          console.log('Successfully fetched expenses:', exportData.expenses.length)
         } else {
-          console.error('Failed to fetch export data:', await exportRes.text())
+          console.error('Failed to fetch expenses:', await expensesRes.text())
         }
       } catch (error) {
-        console.error('Error fetching export data:', error)
+        console.error('Error fetching expenses:', error)
       }
       
+      // Fetch incomes
+      try {
+        const incomesRes = await fetch('/api/income')
+        if (incomesRes.ok) {
+          exportData.incomes = await incomesRes.json()
+          console.log('Successfully fetched incomes:', exportData.incomes.length)
+        } else {
+          console.error('Failed to fetch incomes:', await incomesRes.text())
+        }
+      } catch (error) {
+        console.error('Error fetching incomes:', error)
+      }
+      
+      // Fetch accounts
+      try {
+        const accountsRes = await fetch('/api/account')
+        if (accountsRes.ok) {
+          exportData.accounts = await accountsRes.json()
+          console.log('Successfully fetched accounts:', exportData.accounts.length)
+        } else {
+          console.error('Failed to fetch accounts:', await accountsRes.text())
+        }
+      } catch (error) {
+        console.error('Error fetching accounts:', error)
+      }
+      
+      // Fetch categories
+      try {
+        const categoriesRes = await fetch('/api/category')
+        if (categoriesRes.ok) {
+          exportData.categories = await categoriesRes.json()
+          console.log('Successfully fetched categories:', exportData.categories.length)
+        } else {
+          console.error('Failed to fetch categories:', await categoriesRes.text())
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error)
+      }
+      
+      // Fetch tasks (this part remains unchanged)
       try {
         const tasksRes = await fetch('/api/tasks')
         if (tasksRes.ok) {
@@ -127,7 +156,7 @@ export default function BackupPage() {
         `fintrack-backup-${new Date().toISOString().split("T")[0]}.json`, 
         "application/json"
       )
-
+  
       toast({
         title: "Export successful",
         description: "Your data has been exported successfully.",
@@ -216,7 +245,7 @@ export default function BackupPage() {
       const rows = transactions.map((transaction: any) => {
         return [
           escapeCSV(transaction._id || transaction.id || ''),
-          escapeCSV(transaction.title || transaction.description || ''),
+          escapeCSV(transaction.title || transaction.description || transaction.name || ''),
           escapeCSV(transaction.amount || 0),
           escapeCSV(transaction.type || ''),
           escapeCSV(transaction.category?.name || transaction.category || 'N/A'),
