@@ -450,7 +450,7 @@ const sampleArticles: Article[] = [
 const sampleDailyTips: DailyTip[] = [
   {
     id: '1',
-    content: 'Try the 24-hour rule: Wait 24 hours before making any non-essential purchase over $50 to avoid impulse buying.',
+    content: 'Try the 24-hour rule: Wait 24 hours before making any non-essential purchase over Rp. 100.000,00 to avoid impulse buying.',
     category: 'saving'
   },
   {
@@ -475,7 +475,7 @@ const sampleDailyTips: DailyTip[] = [
   },
   {
     id: '6',
-    content: 'Pay more than the minimum on credit cards. Even $20 extra per month can save you hundreds in interest.',
+    content: 'Pay more than the minimum on credit cards. Even Rp. 50.000,00 extra per month can save you hundreds in interest.',
     category: 'debt'
   },
   {
