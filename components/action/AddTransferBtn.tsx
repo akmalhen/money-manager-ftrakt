@@ -188,15 +188,19 @@ function AddTransferBtn({ accounts }: Props) {
                             )}
                           </Button>
                         </PopoverTrigger>
-                        <PopoverContent align="start" className=" w-auto p-0">
+                        <PopoverContent align="start" className="z-50 w-auto p-0 bg-background">
                           <Calendar
                             mode="single"
                             captionLayout="dropdown-buttons"
                             selected={date}
-                            onSelect={field.onChange}
-                            onDayClick={setDate}
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              setDate(date);
+                              document.body.click();
+                            }}
                             fromYear={2000}
                             toYear={2025}
+                            className="pointer-events-auto"
                           />
                         </PopoverContent>
                       </Popover>
