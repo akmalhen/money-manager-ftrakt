@@ -103,6 +103,12 @@ export const SidebarLinks = [
     icon: <HiSparkles size={20} />,
     section: "AI Tools",
   },
+  {
+    title: "Predict Money",
+    path: "/predict",
+    icon: <HiChatBubbleLeftRight size={20} />,
+    section: "AI Tools",
+  },
 ];
 
 export type AccountType = {
