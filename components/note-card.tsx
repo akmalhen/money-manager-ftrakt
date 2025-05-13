@@ -156,7 +156,7 @@ export function NoteCard({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will permanently delete the note "{title}". This action cannot be undone.
+              This will permanently delete the note -{title}-. This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

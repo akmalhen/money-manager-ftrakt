@@ -39,7 +39,7 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
         <h2 className="text-2xl font-bold mb-4">Article not found</h2>
-        <p className="text-muted-foreground mb-6">The article you're looking for doesn't exist or has been removed.</p>
+        <p className="text-muted-foreground mb-6">The article youre looking for doesnt exist or has been removed.</p>
         <Link href="/articles">
           <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700">
             <ArrowLeft className="h-4 w-4 mr-2" />

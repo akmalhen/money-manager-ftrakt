@@ -144,7 +144,7 @@ export function CreateNoteDialog({ children, onCreateNote }: CreateNoteDialogPro
         <DialogHeader>
           <DialogTitle>Create New Note</DialogTitle>
           <DialogDescription>
-            Add a new note to your collection. Click save when you're done.
+            Add a new note to your collection. Click save when you are done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

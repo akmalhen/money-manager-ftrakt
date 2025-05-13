@@ -120,7 +120,7 @@ function LoginForm() {
           className="bg-black/20 backdrop-blur-sm p-6 rounded-xl border border-white/10 w-full"
         >
           <p className="italic text-gray-300 mb-4">
-            "Money Manager has transformed how I handle my finances. The insights are invaluable!"
+            Money Manager has transformed how I handle my finances. The insights are invaluable!
           </p>
           <div className="flex items-center">
             <div className="w-10 h-10 rounded-full bg-emerald-800 flex items-center justify-center text-emerald-200 font-bold">

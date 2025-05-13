@@ -435,7 +435,7 @@ export default function LandingPage() {
                             </svg>
                           ))}
                         </div>
-                        <p className="text-xl mb-6 italic text-gray-200">"{testimonials[currentTestimonial].text}"</p>
+                        <p className="text-xl mb-6 italic text-gray-200">{testimonials[currentTestimonial].text}</p>
                         <div>
                           <p className="font-bold text-lg">{testimonials[currentTestimonial].author}</p>
                           <p className="text-emerald-400">{testimonials[currentTestimonial].role}</p>
@@ -445,8 +445,8 @@ export default function LandingPage() {
                   </div>
 
                   {/* Decorative elements */}
-                  <div className="absolute -top-4 -left-4 text-4xl text-emerald-500 opacity-50">"</div>
-                  <div className="absolute -bottom-4 -right-4 text-4xl text-emerald-500 opacity-50">"</div>
+                  <div className="absolute -top-4 -left-4 text-4xl text-emerald-500 opacity-50">-</div>
+                  <div className="absolute -bottom-4 -right-4 text-4xl text-emerald-500 opacity-50">-</div>
                 </motion.div>
               </AnimatePresence>
 

@@ -108,7 +108,7 @@ function QuizResultsComponent({ score, total, onRestart, onClose }: QuizResultsP
               <div className="p-4 rounded-lg bg-primary/10 border border-primary/20 text-center">
                 <Trophy className="h-5 w-5 mx-auto mb-2 text-primary" />
                 <h4 className="font-medium">Level Up!</h4>
-                <p className="text-sm text-muted-foreground">You've reached level {userProgress.level}!</p>
+                <p className="text-sm text-muted-foreground">You have reached level {userProgress.level}!</p>
               </div>
             )}
             

@@ -73,7 +73,7 @@ async function AccountPage() {
                     No Accounts Yet
                   </h4>
                   <p className="text-white/80 mb-3">
-                    You haven't added any accounts yet.
+                    You havent added any accounts yet.
                   </p>
                   <p className="text-sm text-white/60 max-w-md mx-auto">
                     Create an account to start tracking your finances and visualize your spending habits.

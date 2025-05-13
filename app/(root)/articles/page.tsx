@@ -112,7 +112,7 @@ export default function ArticlesPage() {
                 <Bookmark className="h-12 w-12 text-muted-foreground mb-4" />
                 <h3 className="text-xl font-medium mb-2">No saved articles</h3>
                 <p className="text-muted-foreground max-w-md">
-                  You haven't saved any articles yet. Click the "Save" button on articles you want to read later.
+                  You havent saved any articles yet. Click the Save button on articles you want to read later.
                 </p>
               </div>
             )}

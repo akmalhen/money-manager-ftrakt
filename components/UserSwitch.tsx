@@ -69,7 +69,7 @@ export default function UserSwitch() {
       {showInfo && (
         <CardFooter className="border-t pt-4 text-xs text-muted-foreground">
           <div className="space-y-2">
-            <p>If you're seeing the same quiz progress across different users, run the migration script:</p>
+            <p>If you are seeing the same quiz progress across different users, run the migration script:</p>
             <pre className="bg-black/30 p-2 rounded text-xs overflow-x-auto">
               node scripts/migrate-quiz-progress.js
             </pre>

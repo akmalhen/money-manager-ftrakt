@@ -341,9 +341,9 @@ export default function PredictPage() {
                           <div className="space-y-2">
                             {predictions.reduce((sum, item) => sum + item.predicted_income, 0) > 
                              predictions.reduce((sum, item) => sum + item.predicted_expense, 0) ? (
-                              <p>You're predicted to have a positive cash flow over the next 7 days.</p>
+                              <p>You are predicted to have a positive cash flow over the next 7 days.</p>
                             ) : (
-                              <p>You're predicted to spend more than you earn over the next 7 days.</p>
+                              <p>You are predicted to spend more than you earn over the next 7 days.</p>
                             )}
                             
                             <p>
