@@ -128,7 +128,7 @@ export default function LandingPage() {
       <header className="relative z-10 p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DollarSign className="h-8 w-8 text-emerald-400" />
-          <span className="text-xl font-bold tracking-tight">Money Manager</span>
+          <span className="text-xl font-bold tracking-tight">FTRAKT</span>
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
@@ -523,7 +523,7 @@ export default function LandingPage() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <DollarSign className="h-6 w-6 text-emerald-400" />
-              <span className="text-lg font-bold">Money Manager</span>
+              <span className="text-lg font-bold">FTRAKT</span>
             </div>
             <p className="text-gray-400">Your personal financial companion for smart money management.</p>
           </div>

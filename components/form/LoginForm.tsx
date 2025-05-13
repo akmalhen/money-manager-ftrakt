@@ -96,7 +96,7 @@ function LoginForm() {
         <div className="w-full">
           <div className="flex items-center gap-2 mb-12">
             <DollarSign className="h-8 w-8 text-emerald-400" />
-            <span className="text-xl font-bold">Money Manager</span>
+            <span className="text-xl font-bold">FTRAKT</span>
           </div>
 
           <motion.div
@@ -105,7 +105,7 @@ function LoginForm() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="w-1/2"
           >
-            <h1 className="text-3xl md:text-4xl lg:text-4xl font-bold mb-6">Welcome back to Money Manager</h1>
+            <h1 className="text-3xl md:text-4xl lg:text-4xl font-bold mb-6">Welcome back to FTRAKT Money Manager</h1>
             <p className="text-gray-300 mb-8 text-lg">
               Sign in to continue your journey to financial freedom. Track your expenses, manage your budget, and
               achieve your financial goals.
@@ -169,7 +169,7 @@ function LoginForm() {
               <div className="flex justify-between">
                 <Label htmlFor="password">Password</Label>
                 <Link href="#" className="text-sm text-emerald-400 hover:underline">
-                  Forgot password?
+                  Type your Password
                 </Link>
               </div>
               <div className="relative">
@@ -223,7 +223,7 @@ function LoginForm() {
               </div>
             </div>
 
-            <Button 
+            {/* <Button 
               type="button" 
               className="w-full bg-black border border-gray-800 hover:bg-gray-900 text-white py-6"
               onClick={() => signIn("google")}
@@ -248,7 +248,7 @@ function LoginForm() {
                 <path d="M1 1h22v22H1z" fill="none" />
               </svg>
               Sign in with Google
-            </Button>
+            </Button> */}
 
             <div className="text-center mt-6">
               <p className="text-sm text-gray-400">

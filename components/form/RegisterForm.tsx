@@ -100,7 +100,7 @@ function RegisterForm() {
         <div>
           <div className="flex items-center gap-2 mb-12">
             <DollarSign className="h-8 w-8 text-emerald-400" />
-            <span className="text-xl font-bold">Money Manager</span>
+            <span className="text-xl font-bold">FTRAKT</span>
           </div>
 
           <motion.div
@@ -111,7 +111,7 @@ function RegisterForm() {
           >
             <h1 className="text-3xl md:text-4xl font-bold mb-6">Start Your Financial Journey Today</h1>
             <p className="text-gray-300 mb-8">
-              Join thousands of users who are taking control of their finances with Money Manager.
+              Join thousands of users who are taking control of their finances with FTRAKT.
             </p>
           </motion.div>
 
@@ -258,7 +258,7 @@ function RegisterForm() {
               </div>
             </div>
 
-            <Button 
+            {/* <Button 
               type="button" 
               className="w-full bg-black border border-gray-800 hover:bg-gray-900 text-white"
               onClick={() => signIn("google")}
@@ -283,7 +283,7 @@ function RegisterForm() {
                 <path d="M1 1h22v22H1z" fill="none" />
               </svg>
               Sign up with Google
-            </Button>
+            </Button> */}
 
             <div className="text-center mt-6">
               <p className="text-sm text-gray-400">
