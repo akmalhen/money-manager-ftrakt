@@ -8,6 +8,8 @@ import Expense from "@/lib/models/expense.model";
 import { getServerSession , Session} from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     await connectToDB();

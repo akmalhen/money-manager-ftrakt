@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/options';
 
 // Flask backend URL
-const FLASK_API_URL = 'http://localhost:5000';
+const FLASK_API_URL = 'https://money-manager-be-production.up.railway.app/';
 
 export async function POST(request: NextRequest) {
   try {
