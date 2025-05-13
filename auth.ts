@@ -41,19 +41,17 @@ export const auth = async () => {
   };
 };
 
-export const signIn = async (userData?: { name: string; email: string }) => {
+export function signIn(userData?: { id?: string; name: string; email: string }) {
   if (typeof window !== 'undefined') {
     // Create a new user with provided data or generate random data
-    const newUser = userData || {
+    const newUser = userData ? {
+      ...userData,
+      id: userData.id || `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+    } : {
       id: `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
       name: `User ${Math.floor(Math.random() * 1000)}`,
       email: `user-${Date.now()}@fintrack.example`
     };
-    
-    // Ensure the user has an ID
-    if (!newUser.id) {
-      newUser.id = `user-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-    }
     
     // Store the user
     localStorage.setItem('fintrack_current_user', JSON.stringify(newUser));

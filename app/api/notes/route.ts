@@ -3,11 +3,12 @@ import Note from "@/lib/models/note.model";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { Session } from "next-auth";
 
 // GET all notes for the authenticated user
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
 // POST create a new note
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(

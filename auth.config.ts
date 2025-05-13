@@ -15,10 +15,15 @@ type AuthConfig = {
   };
 };
 
-export const authConfig: NextAuthConfig = {
+export const authConfig: AuthConfig = {
   providers: [
     Credentials({
-      async authorize(credentials) {
+      // Define the credentials configuration
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials, req) {
         // This is a simplified auth setup for the quiz feature
         // In a real app, you would validate credentials against your database
         
@@ -27,6 +32,7 @@ export const authConfig: NextAuthConfig = {
           id: "user-1",
           name: "Demo User",
           email: "user@example.com",
+          image: "" // Required image property as a string
         };
       },
     }),
@@ -55,12 +61,8 @@ export const authConfig: NextAuthConfig = {
 
 // This is needed for NextAuth.js type augmentation
 declare module "next-auth" {
-  interface User {
-    id: string;
-  }
-  
   interface Session {
-    user: {
+    user?: {
       id: string;
       name?: string | null;
       email?: string | null;

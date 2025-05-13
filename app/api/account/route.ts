@@ -5,14 +5,14 @@ import User from "@/lib/models/user.model";
 import Account from "@/lib/models/account.model";
 import Income from "@/lib/models/income.model";
 import Expense from "@/lib/models/expense.model";
-import { getServerSession } from "next-auth";
+import { getServerSession , Session} from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 
 export async function GET() {
   try {
     await connectToDB();
     
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(

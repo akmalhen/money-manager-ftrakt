@@ -3,11 +3,12 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { connectToDB } from "@/lib/database";
 import SavingGoal from "@/lib/models/saving-goal.model";
+import { Session } from "next-auth";
 
 // GET /api/goals - Get all goals for the current user
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },
@@ -37,7 +38,7 @@ export async function GET(req: NextRequest) {
 // POST /api/goals - Create a new goal
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, message: "Unauthorized" },

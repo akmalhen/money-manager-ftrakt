@@ -6,6 +6,7 @@ import Account from "@/lib/models/account.model";
 import Category from "@/lib/models/category.model";
 import User from "@/lib/models/user.model";
 import { getServerSession } from "next-auth";
+import mongoose from "mongoose";
 
 export async function GET() {
   try {
@@ -56,24 +57,24 @@ export async function GET() {
     const processedData = {
       expenses: expenses.map(expense => ({
         ...expense,
-        _id: expense._id.toString(),
-        account: expense.account.toString(),
-        category: expense.category.toString(),
-        date: expense.date.toISOString()
+        _id: String(expense._id),
+        account: String(expense.account),
+        category: String(expense.category),
+        date: new Date(expense.date).toISOString()
       })),
       incomes: incomes.map(income => ({
         ...income,
-        _id: income._id.toString(),
-        account: income.account.toString(),
-        date: income.date.toISOString()
+        _id: String(income._id),
+        account: String(income.account),
+        date: new Date(income.date).toISOString()
       })),
       accounts: accounts.map(account => ({
         ...account,
-        _id: account._id.toString()
+        _id: String(account._id)
       })),
       categories: categories.map(category => ({
         ...category,
-        _id: category._id.toString()
+        _id: String(category._id)
       })),
       exportDate: new Date().toISOString()
     };

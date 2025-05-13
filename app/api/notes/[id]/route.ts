@@ -3,6 +3,7 @@ import Note from "@/lib/models/note.model";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { Session } from "next-auth";
 
 // GET a specific note
 export async function GET(
@@ -10,7 +11,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -58,7 +59,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -116,7 +117,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(

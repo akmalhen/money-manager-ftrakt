@@ -3,6 +3,7 @@ import { connectToDB } from "@/lib/database";
 import Task from "@/lib/models/task.model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/options";
+import { Session } from "next-auth";
 
 // GET a specific task
 export async function GET(
@@ -10,7 +11,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -67,7 +68,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -147,7 +148,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(

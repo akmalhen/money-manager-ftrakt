@@ -265,9 +265,11 @@ export async function getUserProgress() {
       // Try to get User ID if possible
       let userObjId = null;
       if (userId.includes('@')) {
-        const User = mongoose.models.User || mongoose.model("User", {
+        const userSchema = new mongoose.Schema({
           email: { type: String, required: true, unique: true }
         });
+        
+        const User = mongoose.models.User || mongoose.model("User", userSchema);
         
         const user = await User.findOne({ email: userId });
         if (user) {

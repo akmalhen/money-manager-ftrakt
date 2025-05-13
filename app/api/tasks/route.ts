@@ -3,11 +3,12 @@ import { connectToDB } from "@/lib/database";
 import Task from "@/lib/models/task.model";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/options";
+import { Session } from "next-auth";
 
 // GET all tasks for the authenticated user
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       return NextResponse.json(
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
 // POST create a new task
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as Session | null;
     
     if (!session || !session.user) {
       console.error("No session or user found:", session);
