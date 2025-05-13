@@ -436,7 +436,7 @@ const sampleArticles: Article[] = [
       
       <p>Remember that financial intimacy, like other forms of intimacy, develops gradually. Be patient with the process and celebrate progress along the way.</p>
     `,
-    imageUrl: '/finance-9090568_1280.jpg',
+    imageUrl: '/hai.jpg',
     category: 'budgeting',
     tags: ['relationships', 'communication', 'money talks', 'financial planning'],
     publishDate: new Date('2025-03-20'),
