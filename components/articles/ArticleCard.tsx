@@ -43,8 +43,8 @@ export function ArticleCard({ article, compact = false }: ArticleCardProps) {
       {!compact && (
         <div className="relative h-48 w-full overflow-hidden">
           <img
-            src={article.imageUrl || "/placeholder.svg"}
-            alt={article.title}
+            src={article.imageUrl}
+            alt=""
             className="w-full h-full object-cover transition-transform hover:scale-105"
           />
           <div

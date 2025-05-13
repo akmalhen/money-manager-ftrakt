@@ -88,8 +88,8 @@ export default function ArticlePage({ params }: { params: { id: string } }) {
             <Card className="border border-white/10 bg-black/40 backdrop-blur-sm shadow-lg dark:border-white/10 dark:bg-black/40 dark:backdrop-blur-sm overflow-hidden">
               <div className="relative h-64 w-full overflow-hidden">
                 <img
-                  src={article.imageUrl || "/placeholder.svg"}
-                  alt={article.title}
+                  src={article.imageUrl}
+                  alt=""
                   className="w-full h-full object-cover"
                 />
                 <div

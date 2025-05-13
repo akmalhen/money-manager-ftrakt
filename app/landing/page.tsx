@@ -23,19 +23,19 @@ const testimonials = [
     text: "Money Manager has completely changed how I track my finances. The visualizations make it easy to spot trends and adjust my spending habits.",
     author: "Sarah Johnson",
     role: "Small Business Owner",
-    avatar: "/placeholder.svg?height=80&width=80",
+    avatar: "/next.svg",
   },
   {
     text: "I've tried many finance apps, but this one finally helped me stick to a budget. The insights feature is a game-changer for financial planning.",
     author: "Michael Chen",
     role: "Software Engineer",
-    avatar: "/placeholder.svg?height=80&width=80",
+    avatar: "/next.svg",
   },
   {
     text: "The budget tracking tools helped me save for my dream vacation in just 6 months. I can finally see where every dollar goes!",
     author: "Jessica Martinez",
     role: "Marketing Manager",
-    avatar: "/placeholder.svg?height=80&width=80",
+    avatar: "/next.svg",
   },
 ]
 
@@ -421,7 +421,7 @@ export default function LandingPage() {
                       <div className="flex-shrink-0">
                         <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-emerald-500/50 p-1">
                           <img
-                            src={testimonials[currentTestimonial].avatar || "/placeholder.svg"}
+                            src={testimonials[currentTestimonial].avatar || "/next.svg"}
                             alt={testimonials[currentTestimonial].author}
                             className="w-full h-full object-cover rounded-full"
                           />

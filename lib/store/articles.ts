@@ -83,7 +83,7 @@ const sampleArticles: Article[] = [
       
       <p>The 50/30/20 rule isn't about restricting your spending—it's about creating awareness and intentionality with your money. By giving every dollar a purpose, you can enjoy today while still building financial security for tomorrow.</p>
     `,
-    imageUrl: '/articles/budgeting.jpg',
+    imageUrl: '/business-9090596_1280.jpg',
     category: 'budgeting',
     tags: ['budget', 'personal finance', 'money management', '50/30/20 rule'],
     publishDate: new Date('2025-04-15'),
@@ -172,7 +172,7 @@ const sampleArticles: Article[] = [
       
       <p>Remember, an emergency fund isn't an investment—it's insurance. Its job isn't to grow wealth but to protect the wealth you're building elsewhere in your financial plan.</p>
     `,
-    imageUrl: '/articles/emergency-fund.jpg',
+    imageUrl: '/cashbox-1642989_1280.jpg',
     category: 'saving',
     tags: ['emergency fund', 'savings', 'financial security'],
     publishDate: new Date('2025-04-10'),
@@ -267,7 +267,7 @@ const sampleArticles: Article[] = [
       
       <p>The best debt repayment method is the one you'll actually stick with until you're debt-free. Be honest with yourself about what motivates you, and choose accordingly. Remember that consistency matters more than which method you choose—both will get you debt-free if you stay committed.</p>
     `,
-    imageUrl: '/articles/debt-repayment.jpg',
+    imageUrl: '/clock-2696234_1280.jpg',
     category: 'debt',
     tags: ['debt repayment', 'debt snowball', 'debt avalanche', 'personal finance'],
     publishDate: new Date('2025-04-05'),
@@ -344,7 +344,7 @@ const sampleArticles: Article[] = [
       
       <p>As Warren Buffett famously advised in his will: "Put 10% of the cash in short-term government bonds and 90% in a very low-cost S&P 500 index fund... I believe the trust's long-term results from this policy will be superior to those attained by most investors."</p>
     `,
-    imageUrl: '/articles/index-funds.jpg',
+    imageUrl: '/dirham-3479568_1280.jpg',
     category: 'investing',
     tags: ['index funds', 'investing', 'passive investing', 'ETFs'],
     publishDate: new Date('2025-03-28'),
@@ -436,7 +436,7 @@ const sampleArticles: Article[] = [
       
       <p>Remember that financial intimacy, like other forms of intimacy, develops gradually. Be patient with the process and celebrate progress along the way.</p>
     `,
-    imageUrl: '/articles/money-talk.jpg',
+    imageUrl: '/finance-9090568_1280.jpg',
     category: 'budgeting',
     tags: ['relationships', 'communication', 'money talks', 'financial planning'],
     publishDate: new Date('2025-03-20'),
