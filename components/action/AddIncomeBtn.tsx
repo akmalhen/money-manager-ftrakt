@@ -112,22 +112,18 @@ function AddIncomeBtn({ accounts }: Props) {
       
       const data = await response.json();
       
-      // Try to parse the analysis result (it comes as a string from the backend)
       try {
-        // Clean up the response to remove markdown code blocks if present
         let cleanedResponse = data.analysis;
         cleanedResponse = cleanedResponse.replace(/```json\s*|\s*```/g, '').trim();
         
         const analysisJson = JSON.parse(cleanedResponse);
         setScanResults(analysisJson);
         
-        // Update form values with the OCR results
         if (analysisJson.judul && analysisJson.judul !== 'Tidak ditemukan') {
           form.setValue('incomeName', analysisJson.judul);
         }
         
         if (analysisJson.tanggal && analysisJson.tanggal !== 'Tidak ditemukan') {
-          // Try to parse the date
           try {
             // First try to use the Date constructor directly (handles ISO format)
             let newDate = new Date(analysisJson.tanggal);

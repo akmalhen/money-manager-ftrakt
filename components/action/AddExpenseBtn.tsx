@@ -96,10 +96,8 @@ function AddExpenseBtn({ accounts, categories }: Props) {
     setScanning(true);
     
     try {
-      // Convert the file to base64
       const base64String = await convertFileToBase64(file);
-      
-      // Send the image to the OCR API
+
       const response = await fetch('/api/ocr-receipt', {
         method: 'POST',
         headers: {
@@ -114,29 +112,22 @@ function AddExpenseBtn({ accounts, categories }: Props) {
       
       const data = await response.json();
       
-      // Try to parse the analysis result (it comes as a string from the backend)
       try {
-        // Clean up the response to remove markdown code blocks if present
         let cleanedResponse = data.analysis;
         cleanedResponse = cleanedResponse.replace(/```json\s*|\s*```/g, '').trim();
         
         const analysisJson = JSON.parse(cleanedResponse);
         setScanResults(analysisJson);
-        
-        // Update form values with the OCR results
+
         if (analysisJson.judul && analysisJson.judul !== 'Tidak ditemukan') {
           form.setValue('expenseName', analysisJson.judul);
         }
         
         if (analysisJson.tanggal && analysisJson.tanggal !== 'Tidak ditemukan') {
-          // Try to parse the date
           try {
-            // First try to use the Date constructor directly (handles ISO format)
             let newDate = new Date(analysisJson.tanggal);
             
-            // If that doesn't work, try to parse the date manually
             if (isNaN(newDate.getTime())) {
-              // Check if the date uses '-' or '/' as separator
               let separator = '';
               if (analysisJson.tanggal.includes('-')) {
                 separator = '-';
@@ -151,46 +142,39 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                 
                 if (dateParts.length === 3) {
                   let day: number, month: number, year: number;
-                  
-                  // Try to determine the format based on the values
+
                   const part0 = parseInt(dateParts[0]);
                   const part1 = parseInt(dateParts[1]);
                   const part2 = parseInt(dateParts[2]);
                   
-                  // If first part is > 31, it's likely a year (YYYY-MM-DD)
                   if (part0 > 31) {
                     year = part0;
-                    month = part1 - 1; // JS months are 0-indexed
+                    month = part1 - 1;
                     day = part2;
                   }
-                  // If last part is > 31, it's likely a year (DD-MM-YYYY)
                   else if (part2 > 31) {
                     day = part0;
                     month = part1 - 1;
                     year = part2;
                   }
-                  // If middle part > 12, it might be a day in MM-DD-YYYY format
                   else if (part1 > 12) {
                     month = part0 - 1;
                     day = part1;
                     year = part2;
                   }
-                  // Default to DD-MM-YYYY format
                   else {
                     day = part0;
                     month = part1 - 1;
                     year = part2;
                   }
-                  
-                  // Handle 2-digit years (assuming 20xx for simplicity)
+
                   const fullYear = year < 100 ? 2000 + year : year;
                   
                   newDate = new Date(fullYear, month, day);
                 }
               }
             }
-            
-            // If we have a valid date, update the form
+
             if (!isNaN(newDate.getTime())) {
               form.setValue('date', newDate);
             }
@@ -200,7 +184,6 @@ function AddExpenseBtn({ accounts, categories }: Props) {
         }
         
         if (analysisJson.subtotal && analysisJson.subtotal !== 'Tidak ditemukan') {
-          // Remove any non-numeric characters and convert to number
           const amount = parseFloat(analysisJson.subtotal.replace(/[^0-9]/g, ''));
           if (!isNaN(amount)) {
             form.setValue('amount', amount);
@@ -226,14 +209,12 @@ function AddExpenseBtn({ accounts, categories }: Props) {
       });
     } finally {
       setScanning(false);
-      // Clear the file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     }
   };
   
-  // Helper function to convert file to base64
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -308,7 +289,6 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col gap-4"
               >
-                {/* Receipt Scanning */}
                 <div className="mb-2">
                   <div className="flex items-center justify-between mb-2">
                     <Label htmlFor="receipt-upload" className="text-sm font-medium">
@@ -402,7 +382,6 @@ function AddExpenseBtn({ accounts, categories }: Props) {
                             selected={field.value}
                             onSelect={(date) => {
                               field.onChange(date);
-                              // Close the popover after selection
                               document.body.click();
                             }}
                             fromYear={2000}
