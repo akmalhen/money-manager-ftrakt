@@ -13,13 +13,12 @@ function OverviewCard({ title, icon, amount, color }: Props) {
 
   return (
     <div className="flex items-center gap-5 rounded-xl border border-white/10 px-6 py-7 shadow-lg backdrop-blur-sm bg-gradient-to-br from-black/80 to-black/60 hover:from-black/90 hover:to-black/70 transition-all duration-300 hover:shadow-xl group relative overflow-hidden">
-      {/* Background glow effect */}
+     
       <div 
         className="absolute -inset-1 opacity-30 blur-xl rounded-full transition-opacity duration-300 group-hover:opacity-40"
         style={{ backgroundColor: `rgba(${color}, 0.2)` }}
       ></div>
       
-      {/* Card content */}
       <div className="relative z-10 flex items-center gap-5 w-full">
         <div
           className="rounded-xl p-3.5 transition-all duration-300 group-hover:scale-110 shadow-lg"

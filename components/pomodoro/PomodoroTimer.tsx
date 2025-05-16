@@ -22,14 +22,12 @@ export function PomodoroTimer() {
 
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
-  // Handle timer logic
   useEffect(() => {
     if (isActive && timeLeft > 0) {
       timerRef.current = setTimeout(() => {
         setTimeLeft(timeLeft - 1)
       }, 1000)
     } else if (isActive && timeLeft === 0) {
-      // Timer completed
       setIsActive(false)
     }
 
@@ -40,7 +38,6 @@ export function PomodoroTimer() {
     }
   }, [isActive, timeLeft])
 
-  // Reset timer when mode changes
   useEffect(() => {
     setTimeLeft(TIMER_SETTINGS[mode].minutes * 60)
     setIsActive(false)
@@ -94,7 +91,6 @@ export function PomodoroTimer() {
       </CardHeader>
       <CardContent className="flex flex-col items-center">
         <div className="relative flex items-center justify-center w-64 h-64 mb-6">
-          {/* Progress ring */}
           <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
             <circle className="text-muted stroke-current" strokeWidth="4" fill="transparent" r="42" cx="50" cy="50" />
             <circle
@@ -114,7 +110,6 @@ export function PomodoroTimer() {
             />
           </svg>
 
-          {/* Timer display */}
           <div className="absolute flex flex-col items-center justify-center">
             <span className="text-4xl font-bold">{formatTime(timeLeft)}</span>
             <span className="text-sm text-muted-foreground mt-1">{isActive ? "In progress" : "Paused"}</span>

@@ -9,7 +9,6 @@ function UserLevelCardComponent() {
   const { userProgress } = useQuiz()
   const { level, points, streakDays } = userProgress
 
-  // Calculate progress to next level
   const pointsForCurrentLevel = (level - 1) * 100
   const pointsForNextLevel = level * 100
   const progressPercentage = ((points - pointsForCurrentLevel) / (pointsForNextLevel - pointsForCurrentLevel)) * 100

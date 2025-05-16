@@ -26,16 +26,13 @@ function QuizResultsComponent({ score, total, onRestart, onClose }: QuizResultsP
   const percentage = Math.round((score / total) * 100)
   const isPerfectScore = score === total
 
-  // Submit quiz results
   useEffect(() => {
     const submitResults = async () => {
       setIsSubmitting(true)
       try {
-        // Call API to update user progress
         const result = await submitQuizResults({
           score,
           total,
-          // You can pass category and difficulty if you have this info
         })
         
         if (!result) {
@@ -43,17 +40,14 @@ function QuizResultsComponent({ score, total, onRestart, onClose }: QuizResultsP
           return
         }
         
-        // Check for new badges
         if (result.unlockedBadges && result.unlockedBadges.length > 0) {
           setNewBadges(result.unlockedBadges)
         }
         
-        // Check for level up
         if (result.userProgress && result.userProgress.level > initialLevel) {
           setLevelUp(true)
         }
         
-        // Show confetti for perfect score or new achievements
         if (isPerfectScore || 
             (result.unlockedBadges && result.unlockedBadges.length > 0) || 
             (result.userProgress && result.userProgress.level > initialLevel)) {
@@ -77,7 +71,6 @@ function QuizResultsComponent({ score, total, onRestart, onClose }: QuizResultsP
           <CardDescription>Your quiz is complete!</CardDescription>
         </CardHeader>
         <CardContent className="space-y-8">
-          {/* Score display */}
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 mb-4">
               <div className="text-3xl font-bold">
@@ -92,9 +85,7 @@ function QuizResultsComponent({ score, total, onRestart, onClose }: QuizResultsP
             </p>
           </div>
 
-          {/* Progress indicators */}
           <div className="space-y-6">
-            {/* XP gained */}
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">XP Gained</span>
@@ -103,7 +94,6 @@ function QuizResultsComponent({ score, total, onRestart, onClose }: QuizResultsP
               <Progress value={100} className="h-2" />
             </div>
             
-            {/* Level progress */}
             {levelUp && (
               <div className="p-4 rounded-lg bg-primary/10 border border-primary/20 text-center">
                 <Trophy className="h-5 w-5 mx-auto mb-2 text-primary" />
@@ -112,7 +102,6 @@ function QuizResultsComponent({ score, total, onRestart, onClose }: QuizResultsP
               </div>
             )}
             
-            {/* New badges */}
             {newBadges.length > 0 && (
               <div className="space-y-3">
                 <h4 className="font-medium flex items-center">

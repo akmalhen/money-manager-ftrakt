@@ -11,12 +11,11 @@ function Sidebar() {
 
   return (
     <nav className="fixed hidden h-screen w-[200px] lg:flex xl:w-[250px] flex-col border-r border-white/10 bg-black/80 backdrop-blur-md shadow-xl">
-      {/* Decorative elements - position these absolutely so they don't affect layout */}
+     
       <div className="absolute top-0 right-0 w-60 h-60 bg-emerald-500/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none"></div>
       <div className="absolute bottom-0 left-0 w-60 h-60 bg-blue-500/10 rounded-full blur-[80px] -ml-20 -mb-20 pointer-events-none"></div>
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:30px_30px] pointer-events-none"></div>
       
-      {/* Logo section - fixed height */}
       <div className="flex-shrink-0 p-4 relative z-10">
         <Link
           href={"/"}
@@ -29,10 +28,8 @@ function Sidebar() {
         </Link>
       </div>
       
-      {/* Scrollable content area without visible scrollbar */}
       <div className="flex-grow overflow-y-auto no-scrollbar relative z-10">
         <div className="px-4 space-y-6 mb-4">
-          {/* Group links by section */}
           {Array.from(new Set(SidebarLinks.map(link => link.section))).map((section) => (
             <div key={section} className="space-y-2">
               <div className="px-3 py-2">
@@ -62,7 +59,6 @@ function Sidebar() {
         </div>
       </div>
       
-      {/* Sign out button - fixed at bottom */}
       <div className="flex-shrink-0 sticky bottom-0 bg-black/80 backdrop-blur-sm border-t border-white/10 p-4 relative z-10">
         <SignOutBtn />
       </div>

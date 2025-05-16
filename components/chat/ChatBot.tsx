@@ -21,9 +21,7 @@ const ChatBot = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
 
-  // Load chat history when component mounts
   useEffect(() => {
-    // Generate a session ID if one doesn't exist in localStorage
     const storedSessionId = localStorage.getItem('chatSessionId');
     if (storedSessionId) {
       setSessionId(storedSessionId);
@@ -35,7 +33,6 @@ const ChatBot = () => {
     }
   }, []);
 
-  // Scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -85,7 +82,6 @@ const ChatBot = () => {
       if (response.ok) {
         const data = await response.json();
         
-        // Save session ID if it's new
         if (data.sessionId && data.sessionId !== sessionId) {
           setSessionId(data.sessionId);
           localStorage.setItem('chatSessionId', data.sessionId);
@@ -117,7 +113,6 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* Chat Bot Button */}
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
@@ -127,11 +122,9 @@ const ChatBot = () => {
         <div className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-green-500 animate-pulse"></div>
       </button>
 
-      {/* Chat Bot Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 md:p-0">
           <div className="relative w-full max-w-md h-[600px] max-h-[90vh] rounded-2xl bg-gradient-to-br from-gray-900 to-black border border-white/10 shadow-xl overflow-hidden">
-            {/* Header */}
             <div className="flex items-center justify-between bg-gradient-to-r from-blue-600 to-indigo-700 px-4 py-3">
               <div className="flex items-center gap-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10">
@@ -148,7 +141,6 @@ const ChatBot = () => {
               </button>
             </div>
             
-            {/* Messages */}
             <div className="h-[calc(100%-120px)] overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
               {messages.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center text-center">
@@ -223,7 +215,6 @@ const ChatBot = () => {
               <div ref={messagesEndRef} />
             </div>
             
-            {/* Input */}
             <div className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-gray-900 p-3">
               <div className="flex items-center gap-2">
                 <textarea
