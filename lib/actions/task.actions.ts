@@ -5,7 +5,6 @@ import Task from "@/lib/models/task.model";
 import User from "@/lib/models/user.model";
 import { revalidatePath } from "next/cache";
 
-// Create a new task
 export async function createTask(
   userId: string,
   title: string,
@@ -23,7 +22,6 @@ export async function createTask(
       throw new Error("User not found");
     }
 
-    // Create new task
     const newTask = await Task.create({
       title,
       description,
@@ -41,18 +39,16 @@ export async function createTask(
   }
 }
 
-// Get all tasks for a user
 export async function getUserTasks(userId: string) {
   try {
     await connectToDB();
 
-    // Verify user exists
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
 
-    // Get tasks
+
     const tasks = await Task.find({ user: userId }).sort({ createdAt: -1 });
 
     return JSON.parse(JSON.stringify(tasks));
@@ -62,7 +58,6 @@ export async function getUserTasks(userId: string) {
   }
 }
 
-// Update a task
 export async function updateTask(
   taskId: string,
   userId: string,
@@ -77,13 +72,11 @@ export async function updateTask(
   try {
     await connectToDB();
 
-    // Verify user exists
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
 
-    // Find task and verify ownership
     const task = await Task.findById(taskId);
     if (!task) {
       throw new Error("Task not found");
@@ -93,7 +86,6 @@ export async function updateTask(
       throw new Error("Not authorized to update this task");
     }
 
-    // Update task
     const updatedTask = await Task.findByIdAndUpdate(
       taskId,
       { ...updateData },
@@ -108,18 +100,16 @@ export async function updateTask(
   }
 }
 
-// Delete a task
 export async function deleteTask(taskId: string, userId: string) {
   try {
     await connectToDB();
 
-    // Verify user exists
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
 
-    // Find task and verify ownership
+
     const task = await Task.findById(taskId);
     if (!task) {
       throw new Error("Task not found");
@@ -129,7 +119,7 @@ export async function deleteTask(taskId: string, userId: string) {
       throw new Error("Not authorized to delete this task");
     }
 
-    // Delete task
+
     await Task.findByIdAndDelete(taskId);
 
     revalidatePath("/tasks");

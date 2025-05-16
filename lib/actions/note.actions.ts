@@ -16,7 +16,6 @@ export async function createNote(
   try {
     await connectToDB();
 
-    // Verify user exists
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
@@ -40,12 +39,11 @@ export async function createNote(
   }
 }
 
-// Get all notes for a user
+
 export async function getUserNotes(userId: string) {
   try {
     await connectToDB();
 
-    // Verify user exists
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
@@ -61,7 +59,7 @@ export async function getUserNotes(userId: string) {
   }
 }
 
-// Update a note
+
 export async function updateNote(
   noteId: string,
   userId: string,
@@ -82,7 +80,7 @@ export async function updateNote(
       throw new Error("User not found");
     }
 
-    // Find note and verify ownership
+
     const note = await Note.findById(noteId);
     if (!note) {
       throw new Error("Note not found");
@@ -92,7 +90,7 @@ export async function updateNote(
       throw new Error("Not authorized to update this note");
     }
 
-    // Update note
+
     const updatedNote = await Note.findByIdAndUpdate(
       noteId,
       { ...updateData },
@@ -107,18 +105,18 @@ export async function updateNote(
   }
 }
 
-// Toggle pin status
+
 export async function togglePinNote(noteId: string, userId: string) {
   try {
     await connectToDB();
 
-    // Verify user exists
+
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
     }
 
-    // Find note and verify ownership
+
     const note = await Note.findById(noteId);
     if (!note) {
       throw new Error("Note not found");
@@ -145,7 +143,7 @@ export async function deleteNote(noteId: string, userId: string) {
   try {
     await connectToDB();
 
-    // Verify user exists
+
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
@@ -161,7 +159,7 @@ export async function deleteNote(noteId: string, userId: string) {
       throw new Error("Not authorized to delete this note");
     }
 
-    // Delete note
+
     await Note.findByIdAndDelete(noteId);
 
     revalidatePath("/notes");

@@ -4,7 +4,6 @@ import { connectToDB } from "@/lib/mongoose";
 import { auth, getCurrentUserInfo } from "@/auth";
 import mongoose from "mongoose";
 
-// Define types for TypeScript
 interface Badge {
   id: string;
   name: string;
@@ -25,7 +24,7 @@ interface QuizHistoryItem {
   date: Date;
 }
 
-// Type for user progress data
+
 interface UserProgressData {
   user: string;
   level: number;
@@ -38,7 +37,7 @@ interface UserProgressData {
   quizHistory: QuizHistoryItem[];
 }
 
-// Default badges that all users will have
+
 const defaultBadges = [
   {
     id: "first-quiz",
@@ -132,21 +131,21 @@ const defaultBadges = [
   }
 ];
 
-// Import the UserProgress model
+
 let UserProgress: any;
 
-// Helper function to get the UserProgress model
+
 async function getUserProgressModel() {
   if (!UserProgress) {
     try {
-      // Only import on the server side
+
       if (typeof window === 'undefined') {
         const importedModule = await import("@/lib/models/quiz.model");
         UserProgress = importedModule.default;
       } else {
-        // On client side, we'll use the API endpoints
+
         console.log("Client-side: Using API endpoints for quiz progress");
-        // Return a dummy model for client-side that will be replaced by API calls
+
         return {};
       }
     } catch (err) {
@@ -156,12 +155,12 @@ async function getUserProgressModel() {
   return UserProgress;
 }
 
-// Get or create user progress
+
 export async function getUserProgress() {
   try {
-    // Check if we're on the client side
+
     if (typeof window !== 'undefined') {
-      // On client side, first try fetching from API endpoint
+
       console.log("Client-side: Fetching user progress from API");
       
       try {
@@ -172,7 +171,6 @@ export async function getUserProgress() {
         }
         const data = await response.json();
         
-        // Store the progress in localStorage as a backup with user-specific key
         try {
           const currentUser = getCurrentUserInfo();
           const userSpecificKey = `fintrack_quiz_progress_${currentUser.id}`;
@@ -185,7 +183,6 @@ export async function getUserProgress() {
       } catch (error) {
         console.error("Error fetching user progress from API:", error);
         
-        // Try to load backup from localStorage with user-specific key
         try {
           const currentUser = getCurrentUserInfo();
           const userSpecificKey = `fintrack_quiz_progress_${currentUser.id}`;
@@ -198,7 +195,6 @@ export async function getUserProgress() {
           console.warn("Could not read quiz progress from localStorage:", storageError);
         }
         
-        // Return fallback data if API fails and no localStorage backup
         console.log("Using fallback user progress data");
         const fallbackProgress = {
           level: 1,
@@ -210,7 +206,6 @@ export async function getUserProgress() {
           quizHistory: []
         };
         
-        // Save fallback to localStorage with user-specific key
         try {
           const currentUser = getCurrentUserInfo();
           const userSpecificKey = `fintrack_quiz_progress_${currentUser.id}`;
@@ -249,20 +244,15 @@ export async function getUserProgress() {
       throw new Error("UserProgress model not available");
     }
     
-    // Find or create user progress
-    // First, try to find by userId field
     let userProgress = await UserProgressModel.findOne({ userId: userId });
     
-    // If not found, try with the legacy user field
     if (!userProgress) {
       userProgress = await UserProgressModel.findOne({ user: userId });
     }
     
-    // If still not found, we need to create a new profile
     if (!userProgress) {
       console.log("Creating new user progress for user:", userId);
       
-      // Try to get User ID if possible
       let userObjId = null;
       if (userId.includes('@')) {
         const userSchema = new mongoose.Schema({
@@ -278,8 +268,8 @@ export async function getUserProgress() {
       }
       
       userProgress = await UserProgressModel.create({
-        user: userObjId || userId, // Use ObjectId reference if available
-        userId: userId, // Always store the string ID
+        user: userObjId || userId, 
+        userId: userId,
         level: 1,
         points: 0,
         quizzesTaken: 0,
@@ -296,7 +286,6 @@ export async function getUserProgress() {
   } catch (error) {
     console.error("Error getting user progress:", error);
     
-    // Return default data as fallback
     return {
       level: 1,
       points: 0,
@@ -309,14 +298,11 @@ export async function getUserProgress() {
   }
 }
 
-// Check for badge unlocks based on user progress
 function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?: number) {
   const unlockedBadges: Badge[] = [];
   
-  // Clone the badges array to avoid modifying the original
   const badges = [...userProgress.badges];
   
-  // Check for first-quiz badge
   const firstQuizBadge = badges.find(b => b.id === "first-quiz");
   if (firstQuizBadge && !firstQuizBadge.unlocked && userProgress.quizzesTaken >= 1) {
     firstQuizBadge.unlocked = true;
@@ -324,7 +310,6 @@ function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?:
     unlockedBadges.push(firstQuizBadge);
   }
   
-  // Check for streak-master badge
   const streakBadge = badges.find(b => b.id === "streak-master");
   if (streakBadge && !streakBadge.unlocked && userProgress.streakDays >= 3) {
     streakBadge.unlocked = true;
@@ -332,7 +317,6 @@ function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?:
     unlockedBadges.push(streakBadge);
   }
   
-  // Check for perfect-score badge
   const perfectBadge = badges.find(b => b.id === "perfect-score");
   if (perfectBadge && !perfectBadge.unlocked && percentage === 100) {
     perfectBadge.unlocked = true;
@@ -340,7 +324,6 @@ function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?:
     unlockedBadges.push(perfectBadge);
   }
   
-  // Check for category-specific badges
   if (category) {
     const categoryMap: { [key: string]: string } = {
       "saving": "saving-expert",
@@ -353,7 +336,6 @@ function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?:
     if (badgeId) {
       const categoryBadge = badges.find(b => b.id === badgeId);
       if (categoryBadge && !categoryBadge.unlocked && percentage && percentage >= 80) {
-        // Count how many quizzes in this category with 80%+ score
         const highScoreQuizzes = userProgress.quizHistory.filter((q: QuizHistoryItem) => 
           q.category === category && ((q.score / q.total) * 100) >= 80
         );
@@ -367,7 +349,6 @@ function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?:
     }
   }
   
-  // Check for quiz-master badge
   const quizMasterBadge = badges.find(b => b.id === "quiz-master");
   if (quizMasterBadge && !quizMasterBadge.unlocked && userProgress.quizzesTaken >= 10) {
     const totalScore = userProgress.quizHistory.reduce((sum: number, quiz: QuizHistoryItem) => sum + quiz.score, 0);
@@ -381,7 +362,6 @@ function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?:
     }
   }
   
-  // Check for financial-guru badge
   const guruBadge = badges.find(b => b.id === "financial-guru");
   if (guruBadge && !guruBadge.unlocked && userProgress.level >= 10) {
     guruBadge.unlocked = true;
@@ -389,13 +369,11 @@ function checkForBadgeUnlocks(userProgress: any, category?: string, percentage?:
     unlockedBadges.push(guruBadge);
   }
   
-  // Update the badges in the user progress
   userProgress.badges = badges;
   
   return unlockedBadges;
 }
 
-// Submit quiz results
 export async function submitQuizResults(quizData: {
   category?: string;
   difficulty?: string;
@@ -403,9 +381,7 @@ export async function submitQuizResults(quizData: {
   total: number;
 }) {
   try {
-    // Check if we're on the client side
     if (typeof window !== 'undefined') {
-      // On client side, first try submitting to API endpoint
       console.log("Client-side: Submitting quiz results to API");
       
       try {
@@ -424,7 +400,6 @@ export async function submitQuizResults(quizData: {
         
         const result = await response.json();
         
-        // Store the updated progress in localStorage as a backup with user-specific key
         try {
           const currentUser = getCurrentUserInfo();
           const userSpecificKey = `fintrack_quiz_progress_${currentUser.id}`;
@@ -437,15 +412,12 @@ export async function submitQuizResults(quizData: {
       } catch (error) {
         console.error("Error submitting quiz results to API:", error);
         
-        // Fallback: Update progress locally in localStorage
         try {
           console.log("Using fallback: Updating quiz progress in localStorage");
           
-          // Get current user for user-specific localStorage key
           const currentUser = getCurrentUserInfo();
           const userSpecificKey = `fintrack_quiz_progress_${currentUser.id}`;
           
-          // Get current progress from localStorage or create new
           let currentProgress;
           try {
             const savedProgress = localStorage.getItem(userSpecificKey);
@@ -471,11 +443,9 @@ export async function submitQuizResults(quizData: {
             };
           }
           
-          // Update with new quiz data
           const { category, difficulty, score, total } = quizData;
           const percentage = (score / total) * 100;
           
-          // Update quiz history
           currentProgress.quizHistory.push({
             quizId: new Date().getTime().toString(),
             category,
@@ -485,11 +455,9 @@ export async function submitQuizResults(quizData: {
             date: new Date()
           });
           
-          // Update stats
           currentProgress.quizzesTaken += 1;
           currentProgress.correctAnswers += score;
           
-          // Add points based on difficulty and score
           let pointsEarned = score;
           if (difficulty === "medium") pointsEarned *= 2;
           if (difficulty === "hard") pointsEarned *= 3;
@@ -510,23 +478,18 @@ export async function submitQuizResults(quizData: {
             const dayDifference = Math.floor((today.getTime() - lastQuizDay.getTime()) / (1000 * 60 * 60 * 24));
             
             if (dayDifference === 1) {
-              // Consecutive day
               currentProgress.streakDays += 1;
             } else if (dayDifference > 1) {
-              // Streak broken
               currentProgress.streakDays = 1;
             }
           } else {
-            // First quiz ever
             currentProgress.streakDays = 1;
           }
           
           currentProgress.lastQuizDate = today;
           
-          // Check for badges to unlock
           const unlockedBadges = checkForBadgeUnlocks(currentProgress, category, percentage);
           
-          // Save updated progress with user-specific key
           localStorage.setItem(userSpecificKey, JSON.stringify(currentProgress));
           
           console.log(`Updated quiz progress saved to localStorage for user: ${currentUser.id}`);
@@ -538,10 +501,8 @@ export async function submitQuizResults(quizData: {
         } catch (localStorageError) {
           console.error("Error updating progress in localStorage:", localStorageError);
           
-          // Provide minimal fallback data if local storage fails
           console.log("Using minimal fallback quiz submission data");
           
-          // Create a properly formatted first-quiz badge for the unlockedBadges array
           const firstQuizBadge = defaultBadges.find(b => b.id === "first-quiz");
           const unlockedFirstQuizBadge = firstQuizBadge ? {
             ...firstQuizBadge,
@@ -577,18 +538,14 @@ export async function submitQuizResults(quizData: {
       }
     }
     
-    // Server-side code
     await connectToDB();
     
-    // Get the current user from the session
     const session = await auth();
     
-    // Ensure user is authenticated
     if (!session || !session.user) {
       throw new Error("User not authenticated");
     }
     
-    // @ts-ignore - NextAuth session type mismatch
     const userId = session.user.id || session.user.email;
     
     if (!userId) {
@@ -597,13 +554,11 @@ export async function submitQuizResults(quizData: {
     
     console.log("Submitting quiz results for user:", userId);
     
-    // Get the UserProgress model
     const UserProgressModel = await getUserProgressModel();
     if (!UserProgressModel) {
       throw new Error("UserProgress model not available");
     }
     
-    // Find the user's progress document
     let userProgress = await UserProgressModel.findOne({ user: userId });
     
     if (!userProgress) {
@@ -623,7 +578,6 @@ export async function submitQuizResults(quizData: {
     const { category, difficulty, score, total } = quizData;
     const percentage = (score / total) * 100;
     
-    // Update quiz history
     userProgress.quizHistory.push({
       quizId: new Date().getTime().toString(),
       category,
@@ -633,22 +587,18 @@ export async function submitQuizResults(quizData: {
       date: new Date()
     });
     
-    // Update stats
     userProgress.quizzesTaken += 1;
     userProgress.correctAnswers += score;
     
-    // Add points based on difficulty and score
     let pointsEarned = score;
     if (difficulty === "medium") pointsEarned *= 2;
     if (difficulty === "hard") pointsEarned *= 3;
     
     userProgress.points += pointsEarned;
     
-    // Update level
     const newLevel = Math.floor(userProgress.points / 100) + 1;
     userProgress.level = newLevel;
     
-    // Update streak
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     
@@ -665,15 +615,12 @@ export async function submitQuizResults(quizData: {
         // Streak broken
         userProgress.streakDays = 1;
       }
-      // If dayDifference is 0, it's the same day, so don't update streak
     } else {
-      // First quiz ever
       userProgress.streakDays = 1;
     }
     
     userProgress.lastQuizDate = today;
     
-    // Check for badges to unlock
     const unlockedBadges = checkForBadgeUnlocks(userProgress, category, percentage);
     
     // Save the updated progress to the database
@@ -710,7 +657,6 @@ export async function submitQuizResults(quizData: {
       }]
     };
     
-    // Create a properly formatted first-quiz badge for the unlockedBadges array
     const firstQuizBadge = defaultBadges.find(b => b.id === "first-quiz");
     const unlockedFirstQuizBadge = firstQuizBadge ? {
       ...firstQuizBadge,

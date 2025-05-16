@@ -121,7 +121,6 @@ export function EditNoteDialog({
         throw new Error(result.message || "Failed to update note");
       }
 
-      // Call the parent component's handler with the updated note data
       onEditNote({
         title: data.title,
         content: data.content,

@@ -21,7 +21,7 @@ export async function getAllTransfer(
     });
 
     if (transfers.length === 0) {
-      return []; // Return an empty array if no transfers found
+      return []; 
     }
 
     const transferIds = transfers.map((transfer) => ({
@@ -42,7 +42,6 @@ export async function getAllTransfer(
         acc._id.equals(transfer.account_to),
       );
 
-      // Exclude the account_to and account_from ObjectId
       const { account_from, account_to, __v, ...rest } = transfer._doc;
 
       return {

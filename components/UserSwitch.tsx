@@ -12,21 +12,19 @@ export default function UserSwitch() {
   const [showInfo, setShowInfo] = useState(false);
 
   useEffect(() => {
-    // Get the current user when the component mounts
     const user = getCurrentUserInfo();
     setCurrentUser(user);
   }, []);
 
   const handleUserSwitch = () => {
-    // Create a new user and sign in
     signOut().then(() => {
       signIn();
-      // Refresh the page to load the new user's data
+
       window.location.reload();
     });
   };
 
-  // If the component is accessed server-side or user is not loaded yet
+
   if (!currentUser) return null;
 
   if (!isOpen) {

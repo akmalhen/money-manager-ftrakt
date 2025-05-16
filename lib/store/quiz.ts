@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { getUserProgress, submitQuizResults } from "../actions/quiz.actions";
 import { getCurrentUserInfo } from "@/auth";
 
-// Types
+
 export interface QuizQuestion {
   id: string;
   question: string;
@@ -42,7 +42,7 @@ export interface UserProgress {
   }[];
 }
 
-// Define the result type from submitQuizResults
+
 export interface QuizSubmitResult {
   userProgress: UserProgress;
   unlockedBadges: Badge[];
@@ -408,7 +408,7 @@ const quizQuestions: QuizQuestion[] = [
   }
 ];
 
-// Initialize the default user progress
+
 const defaultUserProgress: UserProgress = {
   level: 1,
   points: 0,
@@ -419,18 +419,15 @@ const defaultUserProgress: UserProgress = {
   quizHistory: []
 };
 
-// Try to get initial user progress from localStorage if available
 let initialUserProgress = defaultUserProgress;
 if (typeof window !== 'undefined') {
   try {
-    // Get current user ID to use as a key prefix
     const currentUser = getCurrentUserInfo();
     const userSpecificKey = `fintrack_quiz_progress_${currentUser.id}`;
     
     const savedProgress = localStorage.getItem(userSpecificKey);
     if (savedProgress) {
       const parsed = JSON.parse(savedProgress);
-      // Ensure parsed data has the expected structure
       if (parsed && 
           typeof parsed === 'object' && 
           'level' in parsed && 
@@ -445,18 +442,15 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// Create the store
 export const useQuiz = create<QuizStore>((set, get) => ({
   questions: quizQuestions,
   userProgress: initialUserProgress,
   isLoading: false,
   error: null,
   
-  // Get random quiz questions filtered by category and difficulty
   getRandomQuizQuestions: (count, category, difficulty) => {
     const allQuestions = get().questions;
     
-    // Filter by category and difficulty if provided
     let filteredQuestions = allQuestions;
     if (category) {
       filteredQuestions = filteredQuestions.filter(q => q.category === category);
@@ -465,33 +459,27 @@ export const useQuiz = create<QuizStore>((set, get) => ({
       filteredQuestions = filteredQuestions.filter(q => q.difficulty === difficulty);
     }
     
-    // Shuffle the questions and return the requested count
     const shuffled = [...filteredQuestions].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, Math.min(count, shuffled.length));
   },
   
-  // Check if an answer is correct
   submitQuizAnswer: (questionId, answerIndex) => {
     const question = get().questions.find(q => q.id === questionId);
     if (!question) return false;
     return question.correctAnswer === answerIndex;
   },
   
-  // Submit quiz results and update user progress
   submitQuizResults: async (quizData) => {
     set({ isLoading: true, error: null });
     
     try {
-      // Submit to backend and get updated progress
       const result = await submitQuizResults(quizData);
       
-      // Update the store with the new progress
       set({ 
         userProgress: result.userProgress,
         isLoading: false 
       });
       
-      // Persist to localStorage as backup with user-specific key
       if (typeof window !== 'undefined') {
         try {
           const currentUser = getCurrentUserInfo();
@@ -510,13 +498,10 @@ export const useQuiz = create<QuizStore>((set, get) => ({
         isLoading: false 
       });
       
-      // Try to update localStorage even if API fails
       if (typeof window !== 'undefined') {
         try {
-          // Get current progress
           const currentProgress = get().userProgress;
           
-          // Update stats
           const updatedProgress = {
             ...currentProgress,
             quizzesTaken: currentProgress.quizzesTaken + 1,
@@ -536,12 +521,10 @@ export const useQuiz = create<QuizStore>((set, get) => ({
             ]
           };
           
-          // Persist to localStorage with user-specific key
           const currentUser = getCurrentUserInfo();
           const userSpecificKey = `fintrack_quiz_progress_${currentUser.id}`;
           localStorage.setItem(userSpecificKey, JSON.stringify(updatedProgress));
           
-          // Update the store
           set({ userProgress: updatedProgress });
           
           return {
@@ -557,20 +540,17 @@ export const useQuiz = create<QuizStore>((set, get) => ({
     }
   },
   
-  // Fetch user progress from backend
   fetchUserProgress: async () => {
     set({ isLoading: true, error: null });
     
     try {
       const progress = await getUserProgress();
       
-      // Update the store with fetched progress
       set({ 
         userProgress: progress,
         isLoading: false 
       });
       
-      // Persist to localStorage as backup with user-specific key
       if (typeof window !== 'undefined') {
         try {
           const currentUser = getCurrentUserInfo();
@@ -589,7 +569,6 @@ export const useQuiz = create<QuizStore>((set, get) => ({
         isLoading: false 
       });
       
-      // If API fails, try to get from localStorage with user-specific key
       if (typeof window !== 'undefined') {
         try {
           const currentUser = getCurrentUserInfo();
@@ -605,7 +584,6 @@ export const useQuiz = create<QuizStore>((set, get) => ({
         }
       }
       
-      // If all fails, return current progress from store
       return get().userProgress;
     }
   }

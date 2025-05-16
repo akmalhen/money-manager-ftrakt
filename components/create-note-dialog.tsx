@@ -110,7 +110,6 @@ export function CreateNoteDialog({ children, onCreateNote }: CreateNoteDialogPro
         throw new Error(result.message || "Failed to create note");
       }
 
-      // Call the parent component's handler with the new note data
       onCreateNote({
         title: data.title,
         content: data.content,
@@ -118,7 +117,6 @@ export function CreateNoteDialog({ children, onCreateNote }: CreateNoteDialogPro
         color: data.color,
       });
 
-      // Reset form and close dialog
       form.reset();
       setOpen(false);
 
