@@ -19,6 +19,9 @@ import {
   Settings
 } from "lucide-react"
 
+import { TextGenerateEffect } from "@/components/ui/text-generate-effect"
+import {TextGenerateEffect2} from "@/components/ui/text-generate-effect2"
+
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials"
 import {
   Navbar,
@@ -853,10 +856,8 @@ export default function LandingPage() {
 
           <section className="pt-20 px-4 z-20">
             <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-emerald-900/30 to-teal-900/30 p-12 rounded-2xl backdrop-blur-md border border-emerald-500/20">
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Finances?</h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Join thousands of users who have already taken control of their financial future
-              </p>
+              <TextGenerateEffect words="Ready to Transform Your Finances?" className="text-3xl md:text-4xl font-bold mb-6 text-white" />
+              <TextGenerateEffect2 words="Join thousands of users who have already taken control of their financial future" className="text-xl text-gray-300 mb-8" />
 
               <Link href="/register">
                 <Button className="bg-gradient-to-r from-emerald-500 to-teal-700 hover:from-emerald-600 hover:to-teal-800 text-white px-8 py-6 text-lg">
