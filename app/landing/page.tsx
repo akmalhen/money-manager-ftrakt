@@ -43,9 +43,12 @@ import {
   IconTerminal2,
 } from "@tabler/icons-react";
 
+import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
+
 import { SparklesCore } from "@/components/ui/sparkles"
 import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect"
 import { useScroll, useTransform } from "motion/react";
+import { PointerHighlight } from "@/components/ui/pointer-highlight";
 
 const testimonials = [
   {
@@ -219,6 +222,55 @@ const links = [
       href: "#",
     },
   ];
+
+const content = [
+  {
+    title: "Collaborative Editing",
+    description:
+      "Work together in real time with your team, clients, and stakeholders. Collaborate on documents, share ideas, and make decisions quickly. With our platform, you can streamline your workflow and increase productivity.",
+    content: (
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] text-white">
+        Collaborative Editing
+      </div>
+    ),
+  },
+  {
+    title: "Real time changes",
+    description:
+      "See changes as they happen. With our platform, you can track every modification in real time. No more confusion about the latest version of your project. Say goodbye to the chaos of version control and embrace the simplicity of real-time updates.",
+    content: (
+      <div className="flex h-full w-full items-center justify-center text-white">
+        <img
+          src="/linear.webp"
+          width={300}
+          height={300}
+          className="h-full w-full object-cover"
+          alt="linear board demo"
+        />
+      </div>
+    ),
+  },
+  {
+    title: "Version control",
+    description:
+      "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
+    content: (
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--orange-500),var(--yellow-500))] text-white">
+        Version control
+      </div>
+    ),
+  },
+  {
+    title: "Running out of content",
+    description:
+      "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
+    content: (
+      <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] text-white">
+        Running out of content
+      </div>
+    ),
+  },
+];
 
 export default function LandingPage() {
 
@@ -451,13 +503,13 @@ export default function LandingPage() {
                 </span>
               </motion.div>
               <motion.h2
-                className="text-4xl md:text-5xl font-bold mb-4 mt-5"
+                className="text-4xl md:text-5xl font-bold mb-4 mt-5 flex justify-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
                 viewport={{ once: true }}
               >
-                Everything You Need
+                Everything You <span className="ml-2"><PointerHighlight>Need</PointerHighlight></span>
               </motion.h2>
               <motion.p
                 className="text-xl text-gray-400 max-w-2xl mx-auto"
@@ -537,13 +589,13 @@ export default function LandingPage() {
                 </span>
               </motion.div>
               <motion.h2
-                className="text-4xl md:text-5xl font-bold mb-4 mt-5"
+                className="text-4xl md:text-5xl font-bold mb-4 mt-5 flex justify-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
                 viewport={{ once: true }}
               >
-                How It Works
+                How It <span className="ml-2"><PointerHighlight>Works</PointerHighlight></span>
               </motion.h2>
               <motion.p
                 className="text-xl text-gray-400 max-w-2xl mx-auto"
@@ -556,36 +608,90 @@ export default function LandingPage() {
               </motion.p>
             </div>
 
-            <div className="relative">
-              <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gradient-to-r from-pink-500 via-amber-500 to-emerald-500 transform -translate-y-1/2 hidden md:block"></div>
+            <div className="relative py-10">
+              {/* Animated connecting line */}
+              <motion.div 
+                className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 via-amber-500 to-emerald-500 transform -translate-y-1/2 hidden md:block z-0"
+                initial={{ scaleX: 0, opacity: 0 }}
+                whileInView={{ scaleX: 1, opacity: 1 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+                viewport={{ once: true }}
+              />
+              
+              {/* Animated dots on the line */}
+              <div className="hidden md:flex justify-between absolute top-1/2 left-[16%] right-[16%] transform -translate-y-1/2 z-10">
+                {[0, 1, 2].map((i) => (
+                  <motion.div 
+                    key={`dot-${i}`}
+                    className="w-4 h-4 rounded-full bg-white shadow-[0_0_15px_rgba(255,255,255,0.5)]"
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.4, delay: 0.2 + i * 0.2 }}
+                    viewport={{ once: true }}
+                  />
+                ))}
+              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10 mt-8">
                 {steps.map((step, index) => (
                   <motion.div
                     key={index}
-                    className="relative"
-                    initial={{ opacity: 0, y: 20 }}
+                    className="group relative"
+                    initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: step.delay }}
+                    transition={{ duration: 0.7, delay: 0.1 * index }}
                     viewport={{ once: true }}
                   >
-                    <div className="bg-black/80 backdrop-blur-sm rounded-2xl border border-white/5 p-8 hover:border-white/20 transition-all hover:shadow-lg hover:shadow-emerald-500/5 h-full">
-                      <div
-                        className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 ${step.iconBgClass} shadow-lg`}
-                      >
-                        {step.icon}
+                    <div className="relative overflow-hidden bg-black/40 backdrop-blur-xl rounded-2xl border border-white/10 p-8 hover:border-white/30 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/20 h-full group-hover:translate-y-[-5px]">
+                      <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-700 -z-10"
+                        style={{ background: step.gradientClass }}
+                      />
+                      
+                      <div className="relative">
+                        <div className={`w-20 h-20 rounded-2xl flex items-center justify-center mb-8 ${step.iconBgClass} shadow-lg transform transition-transform group-hover:scale-110 duration-500`}>
+                          <motion.div
+                            animate={{ 
+                              boxShadow: ["0 0 0 0px rgba(255,255,255,0)", "0 0 0 10px rgba(255,255,255,0)"] 
+                            }}
+                            transition={{ 
+                              repeat: Infinity, 
+                              duration: 2,
+                              repeatType: "loop", 
+                              ease: "easeInOut" 
+                            }}
+                            className="absolute inset-0 rounded-2xl"
+                          />
+                          {step.icon}
+                        </div>
                       </div>
-                      <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
-                      <p className="text-gray-300">{step.description}</p>
+                      
+                      <motion.h3 
+                        className="text-2xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300 group-hover:from-emerald-300 group-hover:to-white transition-all duration-500"
+                      >
+                        {step.title}
+                      </motion.h3>
+                      <p className="text-gray-300 group-hover:text-white transition-colors duration-500">
+                        {step.description}
+                      </p>
+                      
+                      <div className="mt-6 flex items-center text-emerald-400 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-x-0 group-hover:translate-x-2">
+                        <span className="text-sm font-medium">Get started</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                      </div>
                     </div>
 
-                    <div className="absolute -top-4 -right-4 w-8 h-8 rounded-full bg-white text-black flex items-center justify-center font-bold text-sm shadow-lg">
+                    <div className="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-gradient-to-br from-white to-gray-200 text-black flex items-center justify-center font-bold text-sm shadow-[0_0_15px_rgba(255,255,255,0.3)] z-20 group-hover:shadow-[0_0_20px_rgba(255,255,255,0.5)] transition-all duration-500">
                       {index + 1}
                     </div>
                   </motion.div>
                 ))}
               </div>
             </div>
+
+
+
           </div>
         </section>
 
@@ -609,13 +715,13 @@ export default function LandingPage() {
                 </span>
               </motion.div>
               <motion.h2
-                className="text-4xl md:text-5xl font-bold mb-4 mt-5"
+                className="text-4xl md:text-5xl font-bold mb-4 mt-5 flex justify-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
                 viewport={{ once: true }}
               >
-                What Our Users Say
+                What Our <span className="ml-2 mr-2"><PointerHighlight>Users</PointerHighlight></span> Says
               </motion.h2>
               <motion.p
                 className="text-xl text-gray-400 max-w-2xl mx-auto"
