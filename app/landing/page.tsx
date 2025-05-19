@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { ParticleBackground } from "@/components/ui/particles"
@@ -15,26 +15,56 @@ import {
   Sparkles,
   Target,
   Lock,
+  Box,
+  Settings
 } from "lucide-react"
+
+import { AnimatedTestimonials } from "@/components/ui/animated-testimonials"
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  NavbarButton,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from "@/components/ui/resizable-navbar";
+import { TracingBeam } from "@/components/ui/tracing-beam"
+import { GlowingEffect } from "@/components/ui/glowing-effect"
+import {useRouter} from "next/navigation"
+import {
+  IconBrandGithub,
+  IconBrandX,
+  IconExchange,
+  IconHome,
+  IconNewSection,
+  IconTerminal2,
+} from "@tabler/icons-react";
+
+import { SparklesCore } from "@/components/ui/sparkles"
+import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect"
+import { useScroll, useTransform } from "motion/react";
 
 const testimonials = [
   {
-    text: "Money Manager has completely changed how I track my finances. The visualizations make it easy to spot trends and adjust my spending habits.",
-    author: "Sarah Johnson",
-    role: "Small Business Owner",
-    avatar: "/next.svg",
+    quote: "Money Manager has completely changed how I track my finances. The visualizations make it easy to spot trends and adjust my spending habits.",
+    name: "Sarah Johnson",
+    designation: "Small Business Owner",
+    src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    text: "I've tried many finance apps, but this one finally helped me stick to a budget. The insights feature is a game-changer for financial planning.",
-    author: "Michael Chen",
-    role: "Software Engineer",
-    avatar: "/next.svg",
+    quote: "I've tried many finance apps, but this one finally helped me stick to a budget. The insights feature is a game-changer for financial planning.",
+    name: "Michael Chen",
+    designation: "Software Engineer",
+    src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
-    text: "The budget tracking tools helped me save for my dream vacation in just 6 months. I can finally see where every dollar goes!",
-    author: "Jessica Martinez",
-    role: "Marketing Manager",
-    avatar: "/next.svg",
+    quote: "The budget tracking tools helped me save for my dream vacation in just 6 months. I can finally see where every dollar goes!",
+    name: "Jessica Martinez",
+    designation: "Marketing Manager",
+    src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ]
 
@@ -92,12 +122,124 @@ const steps = [
   },
 ]
 
+interface GridItemProps {
+  icon: React.ReactNode;
+  title: string;
+  description: React.ReactNode;
+}
+
+const GridItem = ({ icon, title, description }: GridItemProps) => {
+  return (
+    <li className="min-h-[14rem] list-none">
+      <div className="relative h-full rounded-2xl border border-gray-700 shadow-[0px_0px_27px_0px_#2D2D2D] p-2 md:rounded-3xl md:p-3">
+        <GlowingEffect
+          spread={40}
+          glow={true}
+          disabled={false}
+          proximity={64}
+          inactiveZone={0.01}
+        />
+        <div className="relative flex h-full flex-col justify-between gap-6 overflow-hidden rounded-xl border border-gray-800 bg-black p-6 md:p-6 dark:shadow-[0px_0px_27px_0px_#2D2D2D]">
+          <div className="relative flex flex-1 flex-col justify-between gap-3">
+            <div className="flex flex-col gap-3">
+              <div className="w-fit rounded-lg border border-gray-600 p-2">
+                {icon}
+              </div>
+              <h3 className="-tracking-4 pt-0.5 font-sans text-xl/[1.375rem] font-semibold text-balance text-white md:text-2xl/[1.875rem] dark:text-white">
+                {title}
+              </h3>
+            </div>
+            <div>
+              <h2 className="font-sans text-sm/[1.125rem] text-gray-400 md:text-base/[1.375rem] dark:text-neutral-400 [&_b]:md:font-semibold [&_strong]:md:font-semibold">
+                {description}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+};
+
+const links = [
+    {
+      title: "Home",
+      icon: (
+        <IconHome className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+ 
+    {
+      title: "Products",
+      icon: (
+        <IconTerminal2 className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+    {
+      title: "Components",
+      icon: (
+        <IconNewSection className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+    {
+      title: "Aceternity UI",
+      icon: (
+        <img
+          src="https://assets.aceternity.com/logo-dark.png"
+          width={20}
+          height={20}
+          alt="Aceternity Logo"
+        />
+      ),
+      href: "#",
+    },
+    {
+      title: "Changelog",
+      icon: (
+        <IconExchange className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+ 
+    {
+      title: "Twitter",
+      icon: (
+        <IconBrandX className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+    {
+      title: "GitHub",
+      icon: (
+        <IconBrandGithub className="h-full w-full text-neutral-500 dark:text-neutral-300" />
+      ),
+      href: "#",
+    },
+  ];
+
 export default function LandingPage() {
+
+  const ref = React.useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+ 
+  const pathLengthFirst = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2]);
+  const pathLengthSecond = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2]);
+  const pathLengthThird = useTransform(scrollYProgress, [0, 0.8], [0.1, 1.2]);
+  const pathLengthFourth = useTransform(scrollYProgress, [0, 0.8], [0.05, 1.2]);
+  const pathLengthFifth = useTransform(scrollYProgress, [0, 0.8], [0, 1.2]);
+
   const [currentTestimonial, setCurrentTestimonial] = useState(0)
 
   const featuresRef = useRef<HTMLElement>(null)
   const howItWorksRef = useRef<HTMLElement>(null)
   const testimonialsRef = useRef<HTMLElement>(null)
+  const router = useRouter()
 
   const scrollToSection = (ref: React.RefObject<HTMLElement>) => {
     if (ref.current) {
@@ -113,11 +255,29 @@ export default function LandingPage() {
     return () => clearInterval(interval)
   }, [])
 
+   const navItems = [
+    {
+      name: "Features",
+      link: "#features",
+    },
+    {
+      name: "How it Work",
+      link: "#how-it-works",
+    },
+    {
+      name: "Testimonials",
+      link: "#testimonials",
+    },
+  ];
+ 
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
-    <div className="min-h-screen relative overflow-hidden text-white bg-black">
+    <div className="min-h-screen relative overflow-hidden text-white bg-black scroll-smooth">
+      <TracingBeam className="z-[1000]">
       <ParticleBackground />
 
-      <header className="relative z-10 p-4 flex items-center justify-between">
+      {/* <header className="relative z-10 p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DollarSign className="h-8 w-8 text-emerald-400" />
           <span className="text-xl font-bold tracking-tight">FTRAKT</span>
@@ -147,10 +307,67 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
-      </header>
+      </header> */}
+
+      <Navbar className="scroll-smooth">
+        {/* Desktop Navigation */}
+        <NavBody>
+          <NavbarLogo />
+          <NavItems items={navItems} />
+          <div className="flex items-center gap-4">
+            <NavbarButton variant="secondary" onClick={() => router.push("/login")}>Login</NavbarButton>
+            <NavbarButton variant="primary" onClick={() => router.push("/register")}>Get Started</NavbarButton>
+          </div>
+        </NavBody>
+ 
+        {/* Mobile Navigation */}
+        <MobileNav>
+          <MobileNavHeader>
+            <NavbarLogo />
+            <MobileNavToggle
+              isOpen={isMobileMenuOpen}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            />
+          </MobileNavHeader>
+ 
+          <MobileNavMenu
+            isOpen={isMobileMenuOpen}
+            onClose={() => setIsMobileMenuOpen(false)}
+          >
+            {navItems.map((item, idx) => (
+              <a
+                key={`mobile-link-${idx}`}
+                href={item.link}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="relative text-neutral-600 dark:text-neutral-300"
+              >
+                <span className="block">{item.name}</span>
+              </a>
+            ))}
+            <div className="flex w-full flex-col gap-4">
+              <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                variant="primary"
+                className="w-full"
+              >
+                Login
+              </NavbarButton>
+              <NavbarButton
+                onClick={() => setIsMobileMenuOpen(false)}
+                variant="primary"
+                className="w-full"
+              >
+                Book a call
+              </NavbarButton>
+            </div>
+          </MobileNavMenu>
+        </MobileNav>
+      </Navbar>
+
+
 
       <main className="relative z-10">
-        <section className="py-20 px-4 max-w-6xl mx-auto text-center">
+        <section className="py-20 px-4 max-w-6xl mx-auto text-center mt-20">
           <motion.h1
             className="text-4xl md:text-6xl font-bold mb-6"
             initial={{ opacity: 0, y: 20 }}
@@ -215,6 +432,8 @@ export default function LandingPage() {
               </div>
             </div>
           </motion.div>
+
+
         </section>
 
         <section id="features" ref={featuresRef} className="py-20 px-4">
@@ -251,7 +470,7 @@ export default function LandingPage() {
               </motion.p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <motion.div
                   key={index}
@@ -277,7 +496,27 @@ export default function LandingPage() {
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </div> */}
+
+            <ul className="grid grid-cols-1 gap-5 md:grid-cols-3">
+              <GridItem
+                icon={<Box className="h-4 w-4 text-green-400 dark:text-neutral-400" />}
+                title="AI - Powered Anayltics."
+                description="Intelligent insights that analyze your spending patterns and suggest optimization strategies"
+              />
+              <GridItem
+                icon={<Settings className="h-4 w-4 text-green-400 dark:text-neutral-400" />}
+                title="Smart Budgeting."
+                description="Adaptive budget recommendations based on your income, goals, and spending history"
+              />
+              <GridItem
+                icon={<Lock className="h-4 w-4 text-green-400 dark:text-neutral-400" />}
+                title="Login - Register Security."
+                description="Enterprise-grade encryption and security protocols to protect your financial data and your account"
+              />
+           </ul>
+
+
           </div>
         </section>
 
@@ -389,7 +628,9 @@ export default function LandingPage() {
               </motion.p>
             </div>
 
-            <div className="relative max-w-4xl mx-auto">
+            <AnimatedTestimonials testimonials={testimonials} />
+
+            {/* <div className="relative max-w-4xl mx-auto">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentTestimonial}
@@ -464,7 +705,7 @@ export default function LandingPage() {
                   </svg>
                 </button>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex justify-center gap-2 mt-8">
               {testimonials.map((_, index) => (
@@ -479,7 +720,10 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
+        
+        
+        
+{/* 
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-emerald-900/30 to-teal-900/30 p-12 rounded-2xl backdrop-blur-md border border-emerald-500/20">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Finances?</h2>
@@ -494,8 +738,54 @@ export default function LandingPage() {
               </Button>
             </Link>
           </div>
-        </section>
+        </section> */}
+
+        <div className="h-[40rem] w-full bg-black flex flex-col items-center justify-center overflow-hidden rounded-md">
+          {/* <h1 className="md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20">
+            FinTrack
+          </h1> */}
+
+          <section className="pt-20 px-4 z-20">
+            <div className="max-w-4xl mx-auto text-center bg-gradient-to-r from-emerald-900/30 to-teal-900/30 p-12 rounded-2xl backdrop-blur-md border border-emerald-500/20">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your Finances?</h2>
+              <p className="text-xl text-gray-300 mb-8">
+                Join thousands of users who have already taken control of their financial future
+              </p>
+
+              <Link href="/register">
+                <Button className="bg-gradient-to-r from-emerald-500 to-teal-700 hover:from-emerald-600 hover:to-teal-800 text-white px-8 py-6 text-lg">
+                  Get Started Now
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+          </section>
+
+          <div className="w-[40rem] h-40 relative z-10">
+            {/* Gradients */}
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
+            <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
+            <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+    
+            {/* Core component */}
+            <SparklesCore
+              background="transparent"
+              minSize={0.4}
+              maxSize={1}
+              particleDensity={1200}
+              className="w-full h-full"
+              particleColor="#FFFFFF"
+            />
+    
+            {/* Radial Gradient to prevent sharp edges */}
+            <div className="absolute inset-0 w-full h-full bg-black [mask-image:radial-gradient(350px_200px_at_top,transparent_20%,white)]"></div>
+          </div>
+        </div>
+        
       </main>
+      
+      </TracingBeam>
 
       <footer className="relative z-10 py-12 px-4 border-t border-white/10">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -548,7 +838,6 @@ export default function LandingPage() {
               </li>
             </ul>
           </div>
-
           <div>
             <h3 className="font-bold mb-4">Legal</h3>
             <ul className="space-y-2 text-gray-400">
@@ -570,6 +859,14 @@ export default function LandingPage() {
             </ul>
           </div>
         </div>
+          
+          {/* <div className="mt-8 md:mt-0 flex justify-center md:justify-end items-end md:w-1/4">
+            <FloatingDock 
+              // only for demo, remove for production
+              items={links}
+            />
+          </div> */}
+
 
         <div className="max-w-6xl mx-auto mt-8 pt-8 border-t border-white/10 text-center text-gray-400">
           <p>© {new Date().getFullYear()} Money Manager. All rights reserved.</p>
