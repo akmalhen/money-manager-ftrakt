@@ -47,6 +47,7 @@ import {
 } from "@tabler/icons-react";
 
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
 
 import { SparklesCore } from "@/components/ui/sparkles"
 import { GoogleGeminiEffect } from "@/components/ui/google-gemini-effect"
@@ -864,6 +865,15 @@ export default function LandingPage() {
                   Get Started Now
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
+                {/* <div className="m-40 flex justify-center text-center">
+                  <HoverBorderGradient
+                    containerClassName="rounded-full"
+                    as="button"
+                    className="text-white bg-black flex items-center space-x-2"
+                  >
+                    <span>Get Started Now</span>
+                  </HoverBorderGradient>
+                </div> */}
               </Link>
             </div>
           </section>
