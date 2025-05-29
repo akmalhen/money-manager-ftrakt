@@ -373,7 +373,7 @@ function RegisterForm() {
               />
             </motion.div>
             <span className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
-              FTRAKT
+              FinTrack
             </span>
           </motion.div>
 
