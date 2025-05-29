@@ -15,7 +15,6 @@ import { motion } from "framer-motion";
 import { DollarSign, Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles } from "lucide-react";
 import { useToast } from "../ui/use-toast";
 
-// Animation configurations outside component to prevent recreation on re-renders
 const BACKGROUND_ANIMATION = {
   background: [
     "linear-gradient(45deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
@@ -160,7 +159,6 @@ const SECONDARY_BUTTON_TRANSITION = {
   repeat: Infinity,
 };
 
-// Memoized AnimatedBackground component
 const AnimatedBackground = memo(() => (
   <motion.div
     className="absolute inset-0"
@@ -171,7 +169,6 @@ const AnimatedBackground = memo(() => (
 
 AnimatedBackground.displayName = 'AnimatedBackground';
 
-// Memoized FloatingOrbs component
 const FloatingOrbs = memo(({ staticAnimationData }: { staticAnimationData: any }) => {
   const orbAnimations = useMemo(() => ({
     x: [0, 100, 0],
@@ -208,7 +205,6 @@ const FloatingOrbs = memo(({ staticAnimationData }: { staticAnimationData: any }
 
 FloatingOrbs.displayName = 'FloatingOrbs';
 
-// Memoized AnimatedParticles component
 const AnimatedParticles = memo(({ staticAnimationData }: { staticAnimationData: any }) => {
   const particleAnimation = useMemo(() => ({
     y: [-20, -100],
@@ -257,7 +253,6 @@ function LoginForm() {
   const session = useSession();
   const { toast } = useToast();
 
-  // Create stable keys and positions that won't change on re-render
   const staticAnimationData = useMemo(() => ({
     orbPositions: Array.from({ length: 6 }, (_, i) => ({
       left: 10 + i * 15,
@@ -542,7 +537,6 @@ function LoginForm() {
                   className="w-full h-14 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold text-lg relative overflow-hidden group transition-all duration-300"
                   disabled={submitting}
                 >
-                  {/* Multiple animated shine effects for better visibility */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
                     animate={BUTTON_SHINE_ANIMATION}

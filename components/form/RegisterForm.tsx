@@ -13,7 +13,6 @@ import { BASE_API_URL } from "../..";
 import { motion } from "framer-motion";
 import { DollarSign, Mail, Lock, User, ArrowRight, Check, Eye, EyeOff, Sparkles } from "lucide-react";
 
-// Animation configurations (same as login form)
 const BACKGROUND_ANIMATION = {
   background: [
     "linear-gradient(45deg, #0f172a 0%, #1e293b 50%, #334155 100%)",
@@ -158,7 +157,6 @@ const SECONDARY_BUTTON_TRANSITION = {
   repeat: Infinity,
 };
 
-// Memoized AnimatedBackground component
 const AnimatedBackground = memo(() => (
   <motion.div
     className="absolute inset-0"
@@ -169,7 +167,6 @@ const AnimatedBackground = memo(() => (
 
 AnimatedBackground.displayName = 'AnimatedBackground';
 
-// Memoized FloatingOrbs component
 const FloatingOrbs = memo(({ staticAnimationData }: { staticAnimationData: any }) => {
   const orbAnimations = useMemo(() => ({
     x: [0, 100, 0],
@@ -206,7 +203,6 @@ const FloatingOrbs = memo(({ staticAnimationData }: { staticAnimationData: any }
 
 FloatingOrbs.displayName = 'FloatingOrbs';
 
-// Memoized AnimatedParticles component
 const AnimatedParticles = memo(({ staticAnimationData }: { staticAnimationData: any }) => {
   const particleAnimation = useMemo(() => ({
     y: [-20, -100],
@@ -242,7 +238,6 @@ const AnimatedParticles = memo(({ staticAnimationData }: { staticAnimationData: 
 AnimatedParticles.displayName = 'AnimatedParticles';
 
 function RegisterForm() {
-  // Keep all your original state and logic
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -256,7 +251,6 @@ function RegisterForm() {
   const { toast } = useToast();
   const session = useSession();
 
-  // Create stable keys and positions that won't change on re-render
   const staticAnimationData = useMemo(() => ({
     orbPositions: Array.from({ length: 6 }, (_, i) => ({
       left: 10 + i * 15,
@@ -271,7 +265,6 @@ function RegisterForm() {
     }))
   }), []);
 
-  // Keep your original useEffect
   useEffect(() => {
     if (session.status === "authenticated") {
       router.push("/dashboard");
@@ -279,7 +272,6 @@ function RegisterForm() {
     }
   }, [session, router]);
 
-  // Keep your original handleSubmit logic
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -327,7 +319,6 @@ function RegisterForm() {
     }
   };
 
-  // Keep your original form handlers
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -353,11 +344,9 @@ function RegisterForm() {
       <AnimatedBackground />
       <FloatingOrbs staticAnimationData={staticAnimationData} />
       
-      {/* Animated mesh gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-transparent to-cyan-500/10" />
       
       <div className="relative z-10 min-h-screen flex flex-col lg:flex-row">
-        {/* Left Side - Enhanced Branding */}
         <motion.div 
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -412,7 +401,6 @@ function RegisterForm() {
             </p>
           </motion.div>
 
-          {/* Enhanced feature list */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -459,7 +447,6 @@ function RegisterForm() {
           </motion.div>
         </motion.div>
 
-        {/* Right Side - Enhanced Registration Form */}
         <motion.div 
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
@@ -484,7 +471,6 @@ function RegisterForm() {
               onSubmit={handleSubmit}
               className="space-y-6"
             >
-              {/* Full Name Field */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -510,7 +496,6 @@ function RegisterForm() {
                 </div>
               </motion.div>
 
-              {/* Email Field */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -537,7 +522,6 @@ function RegisterForm() {
                 </div>
               </motion.div>
 
-              {/* Password Field */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -572,7 +556,6 @@ function RegisterForm() {
                 <p className="text-xs text-gray-500">Must be at least 8 characters</p>
               </motion.div>
 
-              {/* Terms Checkbox */}
               <div className="flex items-start space-x-3">
                 <Checkbox 
                   id="terms" 
@@ -595,7 +578,6 @@ function RegisterForm() {
                 </label>
               </div>
 
-              {/* Submit Button */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -605,7 +587,6 @@ function RegisterForm() {
                   className="w-full h-14 bg-gradient-to-r from-emerald-500 to-cyan-500 hover:from-emerald-600 hover:to-cyan-600 text-white font-semibold text-lg relative overflow-hidden group transition-all duration-300"
                   disabled={submitting}
                 >
-                  {/* Multiple animated shine effects */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
                     animate={BUTTON_SHINE_ANIMATION}
@@ -616,7 +597,6 @@ function RegisterForm() {
                     animate={BUTTON_SCALE_ANIMATION}
                     transition={BUTTON_SCALE_TRANSITION}
                   />
-                  {/* Pulsing border effect */}
                   <motion.div
                     className="absolute inset-0 border-2 border-white/20 rounded-md"
                     animate={BUTTON_BORDER_ANIMATION}
@@ -656,7 +636,6 @@ function RegisterForm() {
                 </div>
               </div>
 
-              {/* Secondary Button */}
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -676,7 +655,6 @@ function RegisterForm() {
                 </Button>
               </motion.div>
 
-              {/* Sign in link */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
