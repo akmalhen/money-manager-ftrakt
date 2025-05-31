@@ -396,7 +396,7 @@ function RegisterForm() {
               </motion.span>
             </h1>
             <p className="text-gray-300 mb-12 text-xl leading-relaxed">
-              Join thousands of users who are taking control of their finances with FTRAKT. 
+              Join thousands of users who are taking control of their finances with FinTrack. 
               Track expenses, create budgets, and achieve your financial goals.
             </p>
           </motion.div>

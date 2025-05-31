@@ -336,7 +336,7 @@ export default function LandingPage() {
       {/* <header className="relative z-10 p-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <DollarSign className="h-8 w-8 text-emerald-400" />
-          <span className="text-xl font-bold tracking-tight">FTRAKT</span>
+          <span className="text-xl font-bold tracking-tight">FinTrack</span>
         </div>
 
         <nav className="hidden md:flex items-center gap-6">
